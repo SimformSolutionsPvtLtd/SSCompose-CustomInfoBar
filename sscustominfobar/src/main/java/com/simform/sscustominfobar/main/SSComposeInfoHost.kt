@@ -32,6 +32,7 @@ import com.simform.sscustominfobar.res.Dimens.DpTwelve
 import com.simform.sscustominfobar.res.Dimens.DpZero
 import com.simform.sscustominfobar.utils.TextType
 import com.simform.sscustominfobar.utils.getShapeByDirection
+import com.simform.sscustominfobar.utils.swipeable
 import com.simform.sscustominfobar.utils.toMillis
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -138,7 +139,7 @@ class SSComposeInfoHostState {
     /**
      * Function that is used to manually hide the currently displayed [SSComposeInfoBar].
      */
-    fun hide() {
+    fun hide() { // todo: Change the method name from "hide" to "dismiss" in the show/hide by scrolling pr.
         visibilityState.targetState = Hidden.value
     }
 
@@ -292,7 +293,10 @@ fun SSComposeInfoHost(
         AnimatedVisibility(
             visibleState = composeHostState.visibilityState,
             modifier = Modifier
-                .align(composeHostState.direction.value.alignment),
+                .align(composeHostState.direction.value.alignment)
+                .then(
+                    if (composeHostState.isInfinite.value) Modifier.swipeable { composeHostState.hide() } else Modifier
+                ),
             enter = enterAnimation,
             exit = exitAnimation
         ) {
@@ -329,7 +333,10 @@ fun SSComposeInfoHost(
         AnimatedVisibility(
             visibleState = composeHostState.visibilityState,
             modifier = Modifier
-                .align(composeHostState.direction.value.alignment),
+                .align(composeHostState.direction.value.alignment)
+                .then(
+                    if (composeHostState.isInfinite.value) Modifier.swipeable { composeHostState.hide() } else Modifier
+                ),
             enter = enterAnimation,
             exit = exitAnimation
         ) {
