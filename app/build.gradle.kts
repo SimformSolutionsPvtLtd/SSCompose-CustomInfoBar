@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.simform.sscustominfobar"
+    namespace = "com.simform.sscustominfobarapp"
     compileSdk = 34
 
     defaultConfig {

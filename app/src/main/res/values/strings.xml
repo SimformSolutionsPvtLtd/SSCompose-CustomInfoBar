@@ -1,3 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SSCustomInfoBar</string>
+
+    // Action Button
+    <string name="slide_in_from_top">Slide In From Top</string>
+    <string name="slide_in_from_bottom">Slide In From Bottom</string>
+    <string name="animated_from_bottom">Animated from bottom</string>
+    <string name="animated_from_top">Animated from top</string>
+    <string name="info_bar_settings">Info Bar Settings</string>
+    <string name="ss_compose_info_bar_demo">SSComposeInfoBar Demo</string>
+    <string name="duration">Duration</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
 </resources>

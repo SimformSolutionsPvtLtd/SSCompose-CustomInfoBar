@@ -1,4 +1,4 @@
-package com.simform.sscustominfobar.ui.theme
+package com.simform.sscustominfobarapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
