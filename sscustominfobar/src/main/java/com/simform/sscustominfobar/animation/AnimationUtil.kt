@@ -9,7 +9,7 @@ import com.simform.sscustominfobar.main.SSComposeInfoBarDirection
 private const val DefaultAnimationDuration = 600
 
 /**
- * Internal function to get enter animation of jet info bar based on [SSComposeInfoBarDirection] provided
+ * Internal function to get enter animation of compose info bar based on [SSComposeInfoBarDirection] provided
  *
  * Example: If the animation direction is from top to bottom then we will get slideInVertically with initial offset from top
  * and if the animation direction is from bottom to top then the initial offset will be set to outside of bottom of the screen
@@ -29,7 +29,7 @@ internal fun getEnterAnimation(
     })
 
 /**
- * Internal function to get exit animation of jet info bar based on [SSComposeInfoBarDirection] provided
+ * Internal function to get exit animation of compose info bar based on [SSComposeInfoBarDirection] provided
  *
  * Example: If the animation direction is from top then we will get slideInVertically with target offset from top
  * and if the animation direction is from bottom then the target offset will be set to outside of bottom of the screen
