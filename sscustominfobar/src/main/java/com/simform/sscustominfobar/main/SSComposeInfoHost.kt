@@ -4,22 +4,20 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.zIndex
-import com.simform.sscustominfobar.animation.SSAnimationType
 import com.simform.sscustominfobar.animation.getEnterAnimation
 import com.simform.sscustominfobar.animation.getExitAnimation
+import com.simform.sscustominfobar.main.SSComposeInfoBarDirection.Bottom
+import com.simform.sscustominfobar.main.SSComposeInfoBarDirection.Top
 import com.simform.sscustominfobar.main.SSComposeInfoBarShapes.roundedBottom
 import com.simform.sscustominfobar.main.SSComposeInfoBarShapes.roundedTop
 import com.simform.sscustominfobar.main.SSComposeInfoBarState.Hidden
@@ -32,7 +30,8 @@ import com.simform.sscustominfobar.res.Dimens.DpLarge
 import com.simform.sscustominfobar.res.Dimens.DpSmall
 import com.simform.sscustominfobar.res.Dimens.DpTwelve
 import com.simform.sscustominfobar.res.Dimens.DpZero
-import com.simform.sscustominfobar.utils.getComposeInfoConfigs
+import com.simform.sscustominfobar.utils.TextType
+import com.simform.sscustominfobar.utils.getShapeByDirection
 import com.simform.sscustominfobar.utils.toMillis
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -47,11 +46,11 @@ private const val DESC_MAX_LINE = 2
  * Wrapper data class for information that will be displayed in [SSComposeInfoBar].
  *
  * @property title
- * @property message
+ * @property description
  */
 data class SSComposeInfoBarData(
-    val title: String,
-    val message: String
+    val title: TextType,
+    val description: TextType
 )
 
 /**
@@ -79,6 +78,15 @@ enum class SSComposeInfoBarState(val value: Boolean) {
 }
 
 /**
+ * Enum class that represents the direction from which the [SSComposeInfoBar] will be presented.
+ * @property Top
+ * @property Bottom
+ */
+enum class SSComposeInfoBarDirection(internal val alignment: Alignment) {
+    Top(Alignment.TopCenter), Bottom(Alignment.BottomCenter)
+}
+
+/**
  * State of the [SSComposeInfoHost], which controls the current [SSComposeInfoBar] being shown
  * inside the [SSComposeInfoHost].
  *
@@ -90,6 +98,16 @@ class SSComposeInfoHostState {
      */
     var visibilityState = MutableTransitionState(Hidden.value)
 
+    private var _direction = mutableStateOf(Top)
+    val direction: State<SSComposeInfoBarDirection> = _direction
+
+    /**
+     * Function that is used in [SSComposeInfoHost] internally to set the direction given by the user.
+     */
+    internal fun setDirection(direction: SSComposeInfoBarDirection) {
+        this._direction.value = direction
+    }
+
     /**
      * Private backing property for isInfinite.
      */
@@ -99,16 +117,6 @@ class SSComposeInfoHostState {
      * A read only [State] property of type [Boolean] which is used to represent whether the current [SSComposeInfoBar]'s Duration is Infinite or not.
      */
     val isInfinite: State<Boolean> = _isInfinite
-
-    /**
-     * Private backing property for [animationType].
-     */
-    private var _animationType = mutableStateOf(SSAnimationType.SlideInFromTop)
-
-    /**
-     * A read only property that represents the animation type of currently shown [SSComposeInfoBar].
-     */
-    val animationType: State<SSAnimationType> = _animationType
 
     /**
      * A read only property that represents whether a [SSComposeInfoBar] is currently being shown or not.
@@ -167,16 +175,13 @@ class SSComposeInfoHostState {
      *
      * @param infoBarData [SSComposeInfoBarData] which will be used to display content(title, description) in [SSComposeInfoBar].
      * @param duration [SSComposeInfoDuration] which will determine how long the [SSComposeInfoBar] stays visible.
-     * @param animationType [SSAnimationType] which defines the animation type which will be used to display the [SSComposeInfoBar].
      */
     suspend fun show(
         infoBarData: SSComposeInfoBarData,
-        duration: SSComposeInfoDuration,
-        animationType: SSAnimationType = SSAnimationType.SlideInFromTop,
+        duration: SSComposeInfoDuration
     ) {
         // This checks whether the current SSComposeInfoBar is not visible and the visibility state is idle(not running any animation).
         if (!isVisible && visibilityState.isIdle) {
-            this._animationType.value = animationType
             _currentComposeInfoBarData.value = infoBarData
             if (duration == Indefinite) {
                 toggleVisibility()
@@ -213,9 +218,9 @@ object SSComposeInfoBarDefaults {
     internal val defaultHeight = DpEighty
 
     /**
-     * Default Max line for message in [SSComposeInfoBar].
+     * Default Max line for description in [SSComposeInfoBar].
      */
-    internal val ssInfoBarMessageMaxLine = DESC_MAX_LINE
+    internal val ssInfoBarDescription = DESC_MAX_LINE
 
     /**
      * Default [Shape] of [SSComposeInfoBar].
@@ -239,12 +244,12 @@ object SSComposeInfoBarDefaults {
 }
 
 /**
- * Internal object that contains the shapes for [SSComposeInfoBar] depending upon the [SSAnimationType].
+ * Object that contains the shapes for [SSComposeInfoBar] depending upon the [SSComposeInfoBarDirection].
  *
- * @property roundedBottom Used when the [SSAnimationType] is [SSAnimationType.SlideInFromTop]
- * @property roundedTop Used when the [SSAnimationType] is [SSAnimationType.SlideInFromBottom]
+ * @property roundedBottom Used when the [SSComposeInfoBarDirection] is [SSComposeInfoBarDirection.Top]
+ * @property roundedTop Used when the [SSComposeInfoBarDirection] is [SSComposeInfoBarDirection.Bottom]
  */
-internal object SSComposeInfoBarShapes {
+object SSComposeInfoBarShapes {
     val roundedBottom =
         RoundedCornerShape(
             topStart = DpZero,
@@ -262,19 +267,6 @@ internal object SSComposeInfoBarShapes {
 }
 
 /**
- * Data class that contains orientation of
- *
- * @property position of [SSComposeInfoBar] when it will be displayed in [SSComposeInfoHost] (Either from Top or Bottom).
- * @property shape of [SSComposeInfoBar]
- */
-data class SSComposeInfoConfig(
-    val position: Alignment,
-    val shape: Shape
-)
-
-private const val COMPOSE_INFO_HOST_Z_INDEX = Float.NEGATIVE_INFINITY
-
-/**
  * Host for [SSComposeInfoBar]s to properly show, hide and dismiss items base on [SSComposeInfoHostState].
  *
  * @param modifier The Modifier to be applied to [SSComposeInfoHost].
@@ -286,28 +278,27 @@ private const val COMPOSE_INFO_HOST_Z_INDEX = Float.NEGATIVE_INFINITY
 fun SSComposeInfoHost(
     modifier: Modifier = Modifier,
     composeHostState: SSComposeInfoHostState,
-    composeInfoBar: @Composable (SSComposeInfoConfig) -> Unit,
+    direction: SSComposeInfoBarDirection = Top,
+    composeInfoBar: @Composable (SSComposeInfoBarData) -> Unit,
     content: @Composable () -> Unit
 ) {
-    val composeInfoConfig by remember(composeHostState.animationType.value) {
-        mutableStateOf(getComposeInfoConfigs(composeHostState.animationType.value))
-    }
-    val exitAnimation = getExitAnimation(composeHostState.animationType.value)
-    val enterAnimation = getEnterAnimation(composeHostState.animationType.value)
+    composeHostState.setDirection(direction)
+    val exitAnimation = getExitAnimation(composeHostState.direction.value)
+    val enterAnimation = getEnterAnimation(composeHostState.direction.value)
     BoxWithConstraints(
         modifier = modifier
-            // Gave lowest z index possible so that the info bar always appears from behind of the outside content
-            .zIndex(COMPOSE_INFO_HOST_Z_INDEX)
     ) {
         content()
         AnimatedVisibility(
             visibleState = composeHostState.visibilityState,
             modifier = Modifier
-                .align(composeInfoConfig.position),
+                .align(composeHostState.direction.value.alignment),
             enter = enterAnimation,
             exit = exitAnimation
         ) {
-            composeHostState.currentComposeInfoBarData.value?.let { composeInfoBar(composeInfoConfig) }
+            composeHostState.currentComposeInfoBarData.value?.let { content ->
+                composeInfoBar(content)
+            }
         }
     }
 }
@@ -325,30 +316,28 @@ fun SSComposeInfoHost(
 fun SSComposeInfoHost(
     modifier: Modifier = Modifier,
     composeHostState: SSComposeInfoHostState,
+    direction: SSComposeInfoBarDirection = Top,
     content: @Composable () -> Unit
 ) {
-    val composeInfoConfig by remember(composeHostState.animationType) {
-        mutableStateOf(getComposeInfoConfigs(composeHostState.animationType.value))
-    }
-    val exitAnimation = getExitAnimation(composeHostState.animationType.value)
-    val enterAnimation = getEnterAnimation(composeHostState.animationType.value)
+    composeHostState.setDirection(direction)
+    val exitAnimation = getExitAnimation(composeHostState.direction.value)
+    val enterAnimation = getEnterAnimation(composeHostState.direction.value)
     BoxWithConstraints(
         modifier = modifier
-            .fillMaxSize()
     ) {
         content()
         AnimatedVisibility(
             visibleState = composeHostState.visibilityState,
             modifier = Modifier
-                .align(composeInfoConfig.position),
+                .align(composeHostState.direction.value.alignment),
             enter = enterAnimation,
             exit = exitAnimation
         ) {
             composeHostState.currentComposeInfoBarData.value?.let { infoBarData ->
                 SSComposeInfoBar(
                     title = infoBarData.title,
-                    message = infoBarData.message,
-                    shape = composeInfoConfig.shape,
+                    description = infoBarData.description,
+                    shape = getShapeByDirection(composeHostState.direction.value),
                     isInfinite = composeHostState.isInfinite.value,
                     onCloseClicked = {
                         composeHostState.hide()
