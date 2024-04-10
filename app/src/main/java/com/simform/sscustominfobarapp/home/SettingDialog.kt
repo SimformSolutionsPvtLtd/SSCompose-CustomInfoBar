@@ -49,7 +49,10 @@ fun SettingDialog(
     var selectedOption by remember {
         mutableStateOf(selectedDuration)
     }
-    BasicAlertDialog(modifier = modifier, onDismissRequest = {}) {
+    BasicAlertDialog(
+        modifier = modifier,
+        onDismissRequest = {}
+    ) {
         Surface(Modifier.clip(MaterialTheme.shapes.medium)) {
             Column(Modifier.padding(AppDimens.DpMedium)) {
                 Text(

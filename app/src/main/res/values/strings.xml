@@ -12,4 +12,9 @@
     <string name="duration">Duration</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="hello">Hello</string>
+    <string name="world">" World"</string>
+    <string name="i">I</string>
+    <string name="love">" Love"</string>
+    <string name="ss_compose_info_bar">" SSComposeInfoBar"</string>
 </resources>

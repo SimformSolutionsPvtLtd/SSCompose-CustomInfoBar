@@ -22,19 +22,24 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import com.simform.sscustominfobar.animation.SSAnimationType
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import com.simform.sscustominfobar.main.SSComposeInfoBar
-import com.simform.sscustominfobar.main.SSComposeInfoBarData
+import com.simform.sscustominfobar.main.SSComposeInfoBarDirection
+import com.simform.sscustominfobar.main.SSComposeInfoBarShapes
 import com.simform.sscustominfobar.main.SSComposeInfoDuration
 import com.simform.sscustominfobar.main.SSComposeInfoHost
 import com.simform.sscustominfobar.main.SSComposeInfoHostState
+import com.simform.sscustominfobar.utils.toTextType
 import com.simform.sscustominfobarapp.R
 import com.simform.sscustominfobarapp.utils.AppDimens
 import com.simform.sscustominfobarapp.utils.ButtonType
 import com.simform.sscustominfobarapp.utils.InfoBarByButtonType
-import kotlinx.coroutines.launch
+import com.simform.sscustominfobarapp.utils.showSSComposeInfoBar
 
 /**
  * Custom Button used in home screen of the demo.
@@ -100,16 +105,24 @@ fun SSCustomInfoBarHome() {
     var duration by remember {
         mutableStateOf(SSComposeInfoDuration.Short)
     }
+    var direction by remember {
+        mutableStateOf((SSComposeInfoBarDirection.Top))
+    }
     Box(modifier = Modifier.fillMaxSize()) {
         SSComposeInfoHost(
             modifier = Modifier
                 .fillMaxSize(),
             composeHostState = composeInfoHostState,
-            composeInfoBar = { infoBarConfig ->
+            direction = direction,
+            composeInfoBar = { content ->
                 InfoBarByButtonType(
                     type = buttonType,
-                    composeHostState = composeInfoHostState,
-                    composeInfoConfig = infoBarConfig
+                    content = content,
+                    isInfinite = composeInfoHostState.isInfinite.value,
+                    shape = if (composeInfoHostState.direction.value == SSComposeInfoBarDirection.Top) SSComposeInfoBarShapes.roundedBottom else SSComposeInfoBarShapes.roundedTop,
+                    onClose = {
+                        composeInfoHostState.hide()
+                    }
                 )
             }
         ) {
@@ -124,18 +137,17 @@ fun SSCustomInfoBarHome() {
                     shouldShowSettingDialog = shouldShowSettingDialog.not()
                 }
                 CustomHomeButton(
-                    title = context.getString(R.string.slide_in_from_top),
+                    title = stringResource(id = R.string.slide_in_from_top),
                     buttonType = ButtonType.DefaultSlideInFromTop
                 ) { btnType ->
-                    buttonType = btnType
-                    coroutineScope.launch {
-                        composeInfoHostState.show(
-                            infoBarData = SSComposeInfoBarData(
-                                context.getString(R.string.slide_in_from_top),
-                                context.getString(R.string.animated_from_top)
-                            ),
-                            duration = duration,
-                            animationType = SSAnimationType.SlideInFromTop
+                    if (!composeInfoHostState.isVisible) {
+                        buttonType = btnType
+                        direction = SSComposeInfoBarDirection.Top
+                        coroutineScope.showSSComposeInfoBar(
+                            context.getString(R.string.slide_in_from_top).toTextType(),
+                            context.getString(R.string.animated_from_top).toTextType(),
+                            composeInfoHostState = composeInfoHostState,
+                            duration = duration
                         )
                     }
                 }
@@ -143,15 +155,48 @@ fun SSCustomInfoBarHome() {
                     title = context.getString(R.string.slide_in_from_bottom),
                     buttonType = ButtonType.DefaultSlideInFromBottom
                 ) { btnType ->
-                    buttonType = btnType
-                    coroutineScope.launch {
-                        composeInfoHostState.show(
-                            infoBarData = SSComposeInfoBarData(
-                                context.getString(R.string.slide_in_from_bottom),
-                                context.getString(R.string.animated_from_bottom)
-                            ),
-                            duration = duration,
-                            animationType = SSAnimationType.SlideInFromBottom
+                    if (!composeInfoHostState.isVisible) {
+                        buttonType = btnType
+                        direction = SSComposeInfoBarDirection.Bottom
+                        coroutineScope.showSSComposeInfoBar(
+                            context.getString(R.string.slide_in_from_bottom).toTextType(),
+                            context.getString(R.string.animated_from_bottom).toTextType(),
+                            composeInfoHostState = composeInfoHostState,
+                            duration = duration
+                        )
+                    }
+                }
+                val titleAnnotated = buildAnnotatedString {
+                    withStyle(SpanStyle(color = Color.Red)) {
+                        append(stringResource(R.string.hello))
+                    }
+                    withStyle(SpanStyle(color = Color.Blue)) {
+                        append(stringResource(R.string.world))
+                    }
+                }
+                val descAnnotated = buildAnnotatedString {
+                    withStyle(SpanStyle(color = Color.Blue, fontSize = AppDimens.SpMedium)) {
+                        append(stringResource(R.string.i))
+                    }
+                    withStyle(SpanStyle(color = Color.Red, fontSize = AppDimens.SpMedium)) {
+                        append(stringResource(R.string.love))
+                    }
+                    withStyle(SpanStyle(color = Color.White, fontSize = AppDimens.SpMedium)) {
+                        append(stringResource(R.string.ss_compose_info_bar))
+                    }
+                }
+                CustomHomeButton(
+                    title = stringResource(R.string.slide_in_from_bottom),
+                    buttonType = ButtonType.DefaultSlideInFromBottom
+                ) { btnType ->
+                    if (!composeInfoHostState.isVisible) {
+                        buttonType = btnType
+                        direction = SSComposeInfoBarDirection.Bottom
+                        coroutineScope.showSSComposeInfoBar(
+                            titleAnnotated.toTextType(),
+                            descAnnotated.toTextType(),
+                            composeInfoHostState = composeInfoHostState,
+                            duration = duration
                         )
                     }
                 }
@@ -170,5 +215,4 @@ fun SSCustomInfoBarHome() {
                 })
         }
     }
-
 }

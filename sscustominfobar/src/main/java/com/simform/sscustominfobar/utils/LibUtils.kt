@@ -1,10 +1,8 @@
 package com.simform.sscustominfobar.utils
 
-import androidx.compose.ui.Alignment
-import com.simform.sscustominfobar.animation.SSAnimationType
 import com.simform.sscustominfobar.main.SSComposeInfoBar
+import com.simform.sscustominfobar.main.SSComposeInfoBarDirection
 import com.simform.sscustominfobar.main.SSComposeInfoBarShapes
-import com.simform.sscustominfobar.main.SSComposeInfoConfig
 import com.simform.sscustominfobar.main.SSComposeInfoDuration
 
 /**
@@ -14,21 +12,13 @@ private const val DURATION_LONG = 10000L
 private const val DURATION_SHORT = 4000L
 
 /**
- * Internal function to create [SSComposeInfoConfig] based on the animationType provided.
- * [SSComposeInfoConfig] contains configuration information such as the shape of the [SSComposeInfoBar] and The position (Top or Bottom) of the [SSComposeInfoBar].
+ * Internal function to create shape for [SSComposeInfoBar] based on the [SSComposeInfoBarDirection] provided.
  *
- * @param animationType The Animation type provided by user.
+ * @param direction The [SSComposeInfoBarDirection] type provided by user.
  */
-internal fun getComposeInfoConfigs(animationType: SSAnimationType) = when (animationType) {
-    SSAnimationType.SlideInFromTop -> SSComposeInfoConfig(
-        position = Alignment.TopCenter,
-        shape = SSComposeInfoBarShapes.roundedBottom
-    )
-
-    SSAnimationType.SlideInFromBottom -> SSComposeInfoConfig(
-        position = Alignment.BottomCenter,
-        shape = SSComposeInfoBarShapes.roundedTop
-    )
+internal fun getShapeByDirection(direction: SSComposeInfoBarDirection) = when (direction) {
+    SSComposeInfoBarDirection.Top -> SSComposeInfoBarShapes.roundedBottom
+    SSComposeInfoBarDirection.Bottom -> SSComposeInfoBarShapes.roundedTop
 }
 
 /**

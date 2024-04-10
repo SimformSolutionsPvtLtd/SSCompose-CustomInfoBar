@@ -15,7 +15,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,9 +25,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import com.simform.sscustominfobar.main.components.CustomText
 import com.simform.sscustominfobar.res.Dimens
 import com.simform.sscustominfobar.res.Dimens.DpMedium
 import com.simform.sscustominfobar.res.Dimens.DpThirtyFour
+import com.simform.sscustominfobar.utils.TextType
 
 /**
  * Max num of lines for title in [SSComposeInfoBar]
@@ -63,8 +64,8 @@ data class SSComposeInfoBarColors(
  * @param modifier  The [modifier] to be applied to the [SSComposeInfoBar].
  * @param title The text to be shown in the [SSComposeInfoBar] as title.
  * @param titleStyle The [TextStyle] that will be applied to the title of the [SSComposeInfoBar].
- * @param message The text to be shown in the [SSComposeInfoBar] as Description.
- * @param messageStyle The [TextStyle] that will be applied to the description of the [SSComposeInfoBar].
+ * @param description The text to be shown in the [SSComposeInfoBar] as Description.
+ * @param descriptionStyle The [TextStyle] that will be applied to the description of the [SSComposeInfoBar].
  * @param icon The [ImageVector] that will be displayed along with the title and description.
  * @param shape The [Shape] that will be applied to the [SSComposeInfoBar].
  * @param elevations The [SSComposeInfoBarElevation] that represents the tonal and shadow elevation used in [SSComposeInfoBar].
@@ -77,13 +78,13 @@ data class SSComposeInfoBarColors(
 @Composable
 fun SSComposeInfoBar(
     modifier: Modifier = Modifier,
-    title: String,
+    title: TextType,
     titleStyle: TextStyle = LocalTextStyle.current.copy(
         fontWeight = FontWeight.SemiBold,
         fontSize = Dimens.SpMedium
     ),
-    message: String = "",
-    messageStyle: TextStyle = LocalTextStyle.current.copy(
+    description: TextType? = null,
+    descriptionStyle: TextStyle = LocalTextStyle.current.copy(
         fontWeight = FontWeight.Light,
         fontSize = Dimens.SpExtraMedium
     ),
@@ -99,6 +100,7 @@ fun SSComposeInfoBar(
     Surface(
         modifier = modifier
             .then(
+                // NOTE: here this default modifier is added inside of then because we want to override any width and height related modifier given from outside
                 Modifier
                     .fillMaxWidth()
                     .height(height)
@@ -127,17 +129,17 @@ fun SSComposeInfoBar(
                     .weight(1f),
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(
+                CustomText(
                     text = title,
                     maxLines = TITLE_MAX_LINE,
                     overflow = TextOverflow.Ellipsis,
                     style = titleStyle
                 )
-                if (message.isNotBlank()) {
-                    Text(
-                        text = message,
-                        style = messageStyle,
-                        maxLines = SSComposeInfoBarDefaults.ssInfoBarMessageMaxLine,
+                if (description != null) {
+                    CustomText(
+                        text = description,
+                        style = descriptionStyle,
+                        maxLines = SSComposeInfoBarDefaults.ssInfoBarDescription,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
