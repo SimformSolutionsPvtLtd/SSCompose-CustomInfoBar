@@ -97,7 +97,7 @@ fun SSCustomInfoBarHome() {
     }
     val coroutineScope = rememberCoroutineScope()
     var buttonType by remember {
-        mutableStateOf(ButtonType.DefaultSlideInFromTop)
+        mutableStateOf(ButtonType.Default)
     }
     var shouldShowSettingDialog by remember {
         mutableStateOf(false)
@@ -137,30 +137,60 @@ fun SSCustomInfoBarHome() {
                     shouldShowSettingDialog = shouldShowSettingDialog.not()
                 }
                 CustomHomeButton(
-                    title = stringResource(id = R.string.slide_in_from_top),
-                    buttonType = ButtonType.DefaultSlideInFromTop
+                    title = stringResource(id = R.string.show_default_info_bar),
+                    buttonType = ButtonType.Default
                 ) { btnType ->
                     if (!composeInfoHostState.isVisible) {
                         buttonType = btnType
-                        direction = SSComposeInfoBarDirection.Top
                         coroutineScope.showSSComposeInfoBar(
-                            context.getString(R.string.slide_in_from_top).toTextType(),
-                            context.getString(R.string.animated_from_top).toTextType(),
+                            context.getString(R.string.hey_user_good_morning).toTextType(),
+                            context.getString(R.string.we_hope_you_are_doing_well_in_your_life)
+                                .toTextType(),
                             composeInfoHostState = composeInfoHostState,
                             duration = duration
                         )
                     }
                 }
                 CustomHomeButton(
-                    title = context.getString(R.string.slide_in_from_bottom),
-                    buttonType = ButtonType.DefaultSlideInFromBottom
+                    title = stringResource(R.string.show_warning_info_bar),
+                    buttonType = ButtonType.Warning
                 ) { btnType ->
                     if (!composeInfoHostState.isVisible) {
                         buttonType = btnType
-                        direction = SSComposeInfoBarDirection.Bottom
                         coroutineScope.showSSComposeInfoBar(
-                            context.getString(R.string.slide_in_from_bottom).toTextType(),
-                            context.getString(R.string.animated_from_bottom).toTextType(),
+                            context.getString(R.string.warning).toTextType(),
+                            context.getString(R.string.trying_to_access_sensitive_information)
+                                .toTextType(),
+                            composeInfoHostState = composeInfoHostState,
+                            duration = duration
+                        )
+                    }
+                }
+                CustomHomeButton(
+                    title = stringResource(id = R.string.show_error_info_bar),
+                    buttonType = ButtonType.Error
+                ) { btnType ->
+                    if (!composeInfoHostState.isVisible) {
+                        buttonType = btnType
+                        coroutineScope.showSSComposeInfoBar(
+                            context.getString(R.string.error).toTextType(),
+                            context.getString(R.string.failed_to_fetch_data_from_the_server)
+                                .toTextType(),
+                            composeInfoHostState = composeInfoHostState,
+                            duration = duration
+                        )
+                    }
+                }
+                CustomHomeButton(
+                    title = stringResource(id = R.string.show_success_info_bar),
+                    buttonType = ButtonType.Success
+                ) { btnType ->
+                    if (!composeInfoHostState.isVisible) {
+                        buttonType = btnType
+                        coroutineScope.showSSComposeInfoBar(
+                            context.getString(R.string.success).toTextType(),
+                            context.getString(R.string.successfully_fetched_network_data)
+                                .toTextType(),
                             composeInfoHostState = composeInfoHostState,
                             duration = duration
                         )
@@ -186,12 +216,11 @@ fun SSCustomInfoBarHome() {
                     }
                 }
                 CustomHomeButton(
-                    title = stringResource(R.string.slide_in_from_bottom),
-                    buttonType = ButtonType.DefaultSlideInFromBottom
+                    title = context.getString(R.string.show_annotated_text_info_bar),
+                    buttonType = ButtonType.AnnotatedText
                 ) { btnType ->
                     if (!composeInfoHostState.isVisible) {
                         buttonType = btnType
-                        direction = SSComposeInfoBarDirection.Bottom
                         coroutineScope.showSSComposeInfoBar(
                             titleAnnotated.toTextType(),
                             descAnnotated.toTextType(),
@@ -205,12 +234,14 @@ fun SSCustomInfoBarHome() {
         AnimatedVisibility(visible = shouldShowSettingDialog) {
             SettingDialog(
                 modifier = Modifier.align(Alignment.Center),
-                selectedDuration = duration,
+                inputDuration = duration,
+                inputDirection = direction,
                 onCancel = {
                     shouldShowSettingDialog = false
                 },
-                onConfirm = { selectedDuration ->
+                onConfirm = { selectedDuration, selectedDirection ->
                     duration = selectedDuration
+                    direction = selectedDirection
                     shouldShowSettingDialog = false
                 })
         }

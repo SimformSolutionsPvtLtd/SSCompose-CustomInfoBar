@@ -2,19 +2,28 @@
 <resources>
     <string name="app_name">SSCustomInfoBar</string>
 
-    // Action Button
-    <string name="slide_in_from_top">Slide In From Top</string>
-    <string name="slide_in_from_bottom">Slide In From Bottom</string>
-    <string name="animated_from_bottom">Animated from bottom</string>
-    <string name="animated_from_top">Animated from top</string>
     <string name="info_bar_settings">Info Bar Settings</string>
     <string name="ss_compose_info_bar_demo">SSComposeInfoBar Demo</string>
     <string name="duration">Duration</string>
+    <string name="direction">Direction</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="show_default_info_bar">Show Default ComposeInfoBar</string>
+    <string name="hey_user_good_morning">Hey user, Good morning</string>
+    <string name="we_hope_you_are_doing_well_in_your_life">We hope you are doing well in your life.</string>
+    <string name="show_error_info_bar">Show Error ComposeInfoBar</string>
+    <string name="error">Error!!</string>
+    <string name="failed_to_fetch_data_from_the_server">Failed to fetch data from the server.</string>
+    <string name="show_warning_info_bar">Show Warning ComposeInfoBar</string>
+    <string name="trying_to_access_sensitive_information">Trying to access sensitive information.</string>
+    <string name="warning">Warning!!</string>
+    <string name="show_success_info_bar">Show Success ComposeInfoBar</string>
+    <string name="success">Success!!</string>
+    <string name="successfully_fetched_network_data">Successfully fetched network data.</string>
     <string name="hello">Hello</string>
     <string name="world">" World"</string>
-    <string name="i">I</string>
-    <string name="love">" Love"</string>
     <string name="ss_compose_info_bar">" SSComposeInfoBar"</string>
+    <string name="love">" Love"</string>
+    <string name="i">I</string>
+    <string name="show_annotated_text_info_bar">Show Annotated Text Info Bar</string>
 </resources>

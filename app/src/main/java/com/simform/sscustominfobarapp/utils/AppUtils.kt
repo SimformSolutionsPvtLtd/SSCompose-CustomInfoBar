@@ -2,6 +2,9 @@ package com.simform.sscustominfobarapp.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Shape
+import com.simform.sscustominfobar.defaultInfoBars.ErrorInfoBar
+import com.simform.sscustominfobar.defaultInfoBars.SuccessInfoBar
+import com.simform.sscustominfobar.defaultInfoBars.WarningInfoBar
 import com.simform.sscustominfobar.main.SSComposeInfoBar
 import com.simform.sscustominfobar.main.SSComposeInfoBarData
 import com.simform.sscustominfobar.main.SSComposeInfoDuration
@@ -18,8 +21,10 @@ import kotlin.coroutines.EmptyCoroutineContext
  * Button type of the buttons displayed on the home screen.
  */
 enum class ButtonType {
-    DefaultSlideInFromTop,
-    DefaultSlideInFromBottom,
+    Default,
+    Error,
+    Warning,
+    Success,
     AnnotatedText
 }
 
@@ -41,7 +46,7 @@ fun InfoBarByButtonType(
     onClose: () -> Unit = {}
 ) {
     return when (type) {
-        ButtonType.DefaultSlideInFromTop -> DummyDefaultInfoBar(
+        ButtonType.Default -> DummyDefaultInfoBar(
             title = content.title,
             description = content.description,
             isInfinite = isInfinite,
@@ -49,12 +54,34 @@ fun InfoBarByButtonType(
             onClose = onClose
         )
 
-        ButtonType.DefaultSlideInFromBottom -> DummyDefaultInfoBar(
-            title = content.title,
-            description = content.description,
+        ButtonType.Error -> ErrorInfoBar(
+            errorData = SSComposeInfoBarData(
+                title = content.title,
+                description = content.description,
+            ),
             isInfinite = isInfinite,
             shape = shape,
-            onClose = onClose
+            onCloseClicked = onClose
+        )
+
+        ButtonType.Warning -> WarningInfoBar(
+            warningData = SSComposeInfoBarData(
+                title = content.title,
+                description = content.description,
+            ),
+            isInfinite = isInfinite,
+            shape = shape,
+            onCloseClicked = onClose
+        )
+
+        ButtonType.Success -> SuccessInfoBar(
+            successData = SSComposeInfoBarData(
+                title = content.title,
+                description = content.description,
+            ),
+            isInfinite = isInfinite,
+            shape = shape,
+            onCloseClicked = onClose
         )
 
         ButtonType.AnnotatedText -> DummyDefaultInfoBar(
