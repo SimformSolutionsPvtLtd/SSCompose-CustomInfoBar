@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="info_bar_y_offset_animation">ComposeInfoBar YOffSet Animation</string>
+    <string name="scroll_to_hide_animation">Scroll to hide animation</string>
 </resources>
