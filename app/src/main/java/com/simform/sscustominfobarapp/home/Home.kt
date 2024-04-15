@@ -120,6 +120,7 @@ fun SSCustomInfoBarHome() {
             composeHostState = composeInfoHostState,
             direction = direction,
             contentScrollState = lazyListState,
+            enableNetworkMonitoring = true,
             composeInfoBar = { content ->
                 InfoBarByButtonType(
                     type = buttonType,

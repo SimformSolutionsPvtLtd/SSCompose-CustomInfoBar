@@ -2,4 +2,6 @@
 <resources>
     <string name="info_bar_y_offset_animation">ComposeInfoBar YOffSet Animation</string>
     <string name="scroll_to_hide_animation">Scroll to hide animation</string>
+    <string name="oops_seems_like_you_are_offline">Oops!!, Seems like you are offline!</string>
+    <string name="kindly_check_your_network_connection">Kindly check your network connection</string>
 </resources>
