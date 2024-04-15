@@ -19,10 +19,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.simform.sscustominfobar.R
 import com.simform.sscustominfobar.animation.getAnimatedOffset
 import com.simform.sscustominfobar.animation.getEnterAnimation
 import com.simform.sscustominfobar.animation.getExitAnimation
+import com.simform.sscustominfobar.defaultInfoBars.OfflineInfoBar
 import com.simform.sscustominfobar.main.SSComposeInfoBarDirection.Bottom
 import com.simform.sscustominfobar.main.SSComposeInfoBarDirection.Top
 import com.simform.sscustominfobar.main.SSComposeInfoBarShapes.roundedBottom
@@ -38,6 +43,7 @@ import com.simform.sscustominfobar.res.Dimens.DpMedium
 import com.simform.sscustominfobar.res.Dimens.DpSmall
 import com.simform.sscustominfobar.res.Dimens.DpTwelve
 import com.simform.sscustominfobar.res.Dimens.DpZero
+import com.simform.sscustominfobar.utils.ConnectivityObserver
 import com.simform.sscustominfobar.utils.DirectionalLazyListState
 import com.simform.sscustominfobar.utils.ScrollDirection
 import com.simform.sscustominfobar.utils.TextType
@@ -45,6 +51,7 @@ import com.simform.sscustominfobar.utils.getShapeByDirection
 import com.simform.sscustominfobar.utils.rememberDirectionalLazyListState
 import com.simform.sscustominfobar.utils.swipeable
 import com.simform.sscustominfobar.utils.toMillis
+import com.simform.sscustominfobar.utils.toTextType
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -314,6 +321,7 @@ object SSComposeInfoBarShapes {
  * @param composeHostState The state of the current [SSComposeInfoHost].
  * @param direction The direction from which the [SSComposeInfoBar] will be shown.
  * @param contentScrollState The LazyListState which wil be used to show and hide the [SSComposeInfoBar] on scrolling.
+ * @param enableNetworkMonitoring The flag that will decide whether the network monitoring feature is enabled or not.
  * @param composeInfoBar The [SSComposeInfoBar] that will be displayed in [SSComposeInfoHost].
  * @param content content of the screen on which the [SSComposeInfoBar] will be shown.
  */
@@ -323,12 +331,23 @@ fun SSComposeInfoHost(
     composeHostState: SSComposeInfoHostState,
     direction: SSComposeInfoBarDirection = Top,
     contentScrollState: LazyListState? = null,
+    enableNetworkMonitoring: Boolean = false,
     composeInfoBar: @Composable (SSComposeInfoBarData) -> Unit,
     content: @Composable () -> Unit
 ) {
     composeHostState.setDirection(direction)
     val exitAnimation = getExitAnimation(composeHostState.direction.value)
     val enterAnimation = getEnterAnimation(composeHostState.direction.value)
+
+    // For network monitoring
+    val context = LocalContext.current
+    val monitor = remember { ConnectivityObserver(context) }
+    var isOnline: State<Boolean>? = null
+    if (enableNetworkMonitoring) {
+        isOnline = monitor.isOnline.collectAsStateWithLifecycle(initialValue = true)
+    }
+
+    // For Scroll-to-hide feature
     var directionalLazyListState: DirectionalLazyListState? = null
     if (contentScrollState != null) {
         directionalLazyListState =
@@ -370,6 +389,24 @@ fun SSComposeInfoHost(
                 composeInfoBar(content)
             }
         }
+        if (enableNetworkMonitoring) {
+            isOnline?.value?.let {
+                AnimatedVisibility(
+                    visible = !it,
+                    modifier = Modifier
+                        .align(composeHostState.direction.value.alignment),
+                    enter = enterAnimation,
+                    exit = exitAnimation
+                ) {
+                    OfflineInfoBar(
+                        offlineData = SSComposeInfoBarData(
+                            title = stringResource(R.string.oops_seems_like_you_are_offline).toTextType(),
+                            description = stringResource(R.string.kindly_check_your_network_connection).toTextType()
+                        )
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -382,6 +419,7 @@ fun SSComposeInfoHost(
  * @param composeHostState The state of the current [SSComposeInfoHost].
  * @param direction The direction from which the [SSComposeInfoBar] will be shown.
  * @param contentScrollState The LazyListState which wil be used to show and hide the [SSComposeInfoBar] on scrolling.
+ * @param enableNetworkMonitoring The flag that will decide whether the network monitoring feature is enabled or not.
  * @param content content of the screen on which the [SSComposeInfoBar] will be shown.
  */
 @Composable
@@ -390,11 +428,22 @@ fun SSComposeInfoHost(
     composeHostState: SSComposeInfoHostState,
     direction: SSComposeInfoBarDirection = Top,
     contentScrollState: LazyListState? = null,
+    enableNetworkMonitoring: Boolean = false,
     content: @Composable () -> Unit
 ) {
     composeHostState.setDirection(direction)
     val exitAnimation = getExitAnimation(composeHostState.direction.value)
     val enterAnimation = getEnterAnimation(composeHostState.direction.value)
+
+    // For network monitoring
+    val context = LocalContext.current
+    val monitor = remember { ConnectivityObserver(context) }
+    var isOnline: State<Boolean>? = null
+    if (enableNetworkMonitoring) {
+        isOnline = monitor.isOnline.collectAsStateWithLifecycle(initialValue = true)
+    }
+
+    // For Scroll-to-hide feature
     var directionalLazyListState: DirectionalLazyListState? = null
     if (contentScrollState != null) {
         directionalLazyListState =
@@ -442,6 +491,24 @@ fun SSComposeInfoHost(
                         composeHostState.dismiss()
                     }
                 )
+            }
+        }
+        if (enableNetworkMonitoring) {
+            isOnline?.value?.let {
+                AnimatedVisibility(
+                    visible = !it,
+                    modifier = Modifier
+                        .align(composeHostState.direction.value.alignment),
+                    enter = enterAnimation,
+                    exit = exitAnimation
+                ) {
+                    OfflineInfoBar(
+                        offlineData = SSComposeInfoBarData(
+                            title = stringResource(R.string.oops_seems_like_you_are_offline).toTextType(),
+                            description = stringResource(R.string.kindly_check_your_network_connection).toTextType()
+                        )
+                    )
+                }
             }
         }
     }
