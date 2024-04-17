@@ -17,6 +17,8 @@ internal object Dimens {
     val DpEighty = 80.dp
     val DpFortyEight = 48.dp
     val DpThirtyFour = 34.dp
+    val SpFourteen = 14.sp
+    val SpEighteen = 18.sp
 
     // Sp Dimensions
     val SpExtraSmall = 4.sp
