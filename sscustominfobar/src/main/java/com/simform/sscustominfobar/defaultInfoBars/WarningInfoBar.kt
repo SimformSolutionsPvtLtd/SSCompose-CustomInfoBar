@@ -12,6 +12,7 @@ import com.simform.sscustominfobar.main.SSComposeInfoBar
 import com.simform.sscustominfobar.main.SSComposeInfoBarColors
 import com.simform.sscustominfobar.main.SSComposeInfoBarData
 import com.simform.sscustominfobar.main.SSComposeInfoBarDefaults
+import com.simform.sscustominfobar.main.toSSCustomBackground
 import com.simform.sscustominfobar.res.warningOrange
 import com.simform.sscustominfobar.res.white
 
@@ -46,9 +47,12 @@ fun WarningInfoBar(
         description = warningData.description,
         shape = shape,
         icon = icon,
-        colors = SSComposeInfoBarColors(
-            containerColor = warningBackgroundColor,
-            contentColor = warningContentColor
+        customBackground = warningBackgroundColor.toSSCustomBackground(),
+        contentColors = SSComposeInfoBarColors(
+            iconColor = warningContentColor,
+            titleColor = warningContentColor,
+            descriptionColor = warningContentColor,
+            dismissIconColor = warningContentColor
         ),
         onCloseClicked = onCloseClicked,
         isInfinite = isInfinite

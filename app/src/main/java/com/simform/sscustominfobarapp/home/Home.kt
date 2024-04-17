@@ -229,6 +229,51 @@ fun SSCustomInfoBarHome() {
                         )
                     }
                 }
+                CustomHomeButton(
+                    title = stringResource(R.string.gradient_demo_using_brush),
+                    buttonType = ButtonType.GradientDemoBrush
+                ) { btnType ->
+                    if (!composeInfoHostState.isVisible) {
+                        buttonType = btnType
+                        coroutineScope.showSSComposeInfoBar(
+                            context.getString(R.string.success).toTextType(),
+                            context.getString(R.string.successfully_fetched_network_data)
+                                .toTextType(),
+                            composeInfoHostState = composeInfoHostState,
+                            duration = duration
+                        )
+                    }
+                }
+                CustomHomeButton(
+                    title = stringResource(R.string.drawable_demo_using_svg),
+                    buttonType = ButtonType.DrawableDemoSVG
+                ) { btnType ->
+                    if (!composeInfoHostState.isVisible) {
+                        buttonType = btnType
+                        coroutineScope.showSSComposeInfoBar(
+                            context.getString(R.string.success).toTextType(),
+                            context.getString(R.string.successfully_fetched_network_data)
+                                .toTextType(),
+                            composeInfoHostState = composeInfoHostState,
+                            duration = duration
+                        )
+                    }
+                }
+                CustomHomeButton(
+                    title = stringResource(R.string.drawable_demo_using_png),
+                    buttonType = ButtonType.DrawableDemoPNG
+                ) { btnType ->
+                    if (!composeInfoHostState.isVisible) {
+                        buttonType = btnType
+                        coroutineScope.showSSComposeInfoBar(
+                            context.getString(R.string.success).toTextType(),
+                            context.getString(R.string.successfully_fetched_network_data)
+                                .toTextType(),
+                            composeInfoHostState = composeInfoHostState,
+                            duration = duration
+                        )
+                    }
+                }
             }
         }
         AnimatedVisibility(visible = shouldShowSettingDialog) {

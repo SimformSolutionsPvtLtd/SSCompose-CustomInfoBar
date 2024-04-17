@@ -5,6 +5,7 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -14,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.font.FontWeight
 import com.simform.sscustominfobar.animation.getEnterAnimation
 import com.simform.sscustominfobar.animation.getExitAnimation
 import com.simform.sscustominfobar.main.SSComposeInfoBarDirection.Bottom
@@ -25,6 +27,7 @@ import com.simform.sscustominfobar.main.SSComposeInfoBarState.Visible
 import com.simform.sscustominfobar.main.SSComposeInfoDuration.Indefinite
 import com.simform.sscustominfobar.main.SSComposeInfoDuration.Long
 import com.simform.sscustominfobar.main.SSComposeInfoDuration.Short
+import com.simform.sscustominfobar.res.Dimens
 import com.simform.sscustominfobar.res.Dimens.DpEighty
 import com.simform.sscustominfobar.res.Dimens.DpLarge
 import com.simform.sscustominfobar.res.Dimens.DpSmall
@@ -233,15 +236,40 @@ object SSComposeInfoBarDefaults {
      */
     val colors: SSComposeInfoBarColors
         @Composable get() = SSComposeInfoBarColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
+            iconColor = MaterialTheme.colorScheme.onPrimary,
+            titleColor = MaterialTheme.colorScheme.onPrimary,
+            descriptionColor = MaterialTheme.colorScheme.onPrimary,
+            dismissIconColor = MaterialTheme.colorScheme.onPrimary
         )
+
+    /**
+     * Default [SSCustomBackground] for [SSComposeInfoBar].
+     */
+    val defaultSSCustomBackground @Composable get() = MaterialTheme.colorScheme.primary.toSSCustomBackground()
 
     /**
      * Creates default [SSComposeInfoBarElevation] for [SSComposeInfoBar]
      */
     val elevations =
         SSComposeInfoBarElevation(tonalElevation = DpSmall, shadowElevation = DpSmall)
+
+    /**
+     * Default title style of [SSComposeInfoBar].
+     */
+    val defaultTitleStyle
+        @Composable get() = LocalTextStyle.current.copy(
+            fontWeight = FontWeight.SemiBold,
+            fontSize = Dimens.SpEighteen
+        )
+
+    /**
+     * Default description style of [SSComposeInfoBar].
+     */
+    val defaultDescriptionStyle
+        @Composable get() = LocalTextStyle.current.copy(
+            fontWeight = FontWeight.Light,
+            fontSize = Dimens.SpFourteen
+        )
 }
 
 /**

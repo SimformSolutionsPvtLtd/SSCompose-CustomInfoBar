@@ -26,4 +26,7 @@
     <string name="love">" Love"</string>
     <string name="i">I</string>
     <string name="show_annotated_text_info_bar">Show Annotated Text Info Bar</string>
+    <string name="drawable_demo_using_svg">Drawable Demo Using SVG</string>
+    <string name="gradient_demo_using_brush">Gradient Demo using brush</string>
+    <string name="drawable_demo_using_png">Drawable demo using PNG</string>
 </resources>
