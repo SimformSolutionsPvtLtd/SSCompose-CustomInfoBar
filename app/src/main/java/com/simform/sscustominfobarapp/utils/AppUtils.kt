@@ -1,15 +1,22 @@
 package com.simform.sscustominfobarapp.utils
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import com.simform.sscustominfobar.defaultInfoBars.ErrorInfoBar
 import com.simform.sscustominfobar.defaultInfoBars.SuccessInfoBar
 import com.simform.sscustominfobar.defaultInfoBars.WarningInfoBar
 import com.simform.sscustominfobar.main.SSComposeInfoBar
+import com.simform.sscustominfobar.main.SSComposeInfoBarColors
 import com.simform.sscustominfobar.main.SSComposeInfoBarData
 import com.simform.sscustominfobar.main.SSComposeInfoDuration
 import com.simform.sscustominfobar.main.SSComposeInfoHostState
+import com.simform.sscustominfobar.main.toSSCustomBackground
 import com.simform.sscustominfobar.utils.TextType
+import com.simform.sscustominfobarapp.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
@@ -25,7 +32,10 @@ enum class ButtonType {
     Error,
     Warning,
     Success,
-    AnnotatedText
+    AnnotatedText,
+    GradientDemoBrush,
+    DrawableDemoSVG,
+    DrawableDemoPNG,
 }
 
 /**
@@ -91,6 +101,33 @@ fun InfoBarByButtonType(
             shape = shape,
             onClose = onClose
         )
+
+        ButtonType.GradientDemoBrush -> DummyGradientBrushDemo(
+            title = content.title,
+            description = content.description,
+            isInfinite = isInfinite,
+            background = Brush.horizontalGradient(listOf(Color.Red, Color.Green, Color.Blue)),
+            shape = shape,
+            onClose = onClose
+        )
+
+        ButtonType.DrawableDemoSVG -> DummyInfobarWithSVGBackground(
+            title = content.title,
+            description = content.description,
+            background = painterResource(id = R.drawable.liquid_cheese),
+            isInfinite = isInfinite,
+            shape = shape,
+            onClose = onClose
+        )
+
+        ButtonType.DrawableDemoPNG -> DummyInfoBarWithDrawableBackground(
+            title = content.title,
+            background = painterResource(id = R.drawable.wintery_sunburst),
+            description = content.description,
+            isInfinite = isInfinite,
+            shape = shape,
+            onClose = onClose
+        )
     }
 }
 
@@ -116,6 +153,112 @@ private fun DummyDefaultInfoBar(
         description = description,
         isInfinite = isInfinite,
         shape = shape,
+        onCloseClicked = onClose
+    )
+}
+
+
+/**
+ * Dummy [SSComposeInfoBar] with Drawable Background for demo purposes.
+ *
+ * @param title Title string for the [SSComposeInfoBar].
+ * @param description Description string for the [SSComposeInfoBar].
+ * @param background of type [Painter].
+ * @param isInfinite Flag that decides whether [SSComposeInfoBar]'s duration is infinite.
+ * @param shape Shape of the [SSComposeInfoBar].
+ * @param onClose Called when user clicks on the clear button on the [SSComposeInfoBar].
+ */
+@Composable
+private fun DummyInfoBarWithDrawableBackground(
+    title: TextType,
+    description: TextType,
+    background: Painter,
+    isInfinite: Boolean,
+    shape: Shape,
+    onClose: () -> Unit
+) {
+    SSComposeInfoBar(
+        title = title,
+        description = description,
+        customBackground = background.toSSCustomBackground(),
+        contentColors = SSComposeInfoBarColors(
+            iconColor = Color.Black,
+            titleColor = Color.Black,
+            descriptionColor = Color.Black,
+            dismissIconColor = Color.Black
+        ),
+        shape = shape,
+        isInfinite = isInfinite,
+        onCloseClicked = onClose
+    )
+}
+
+/**
+ * Dummy [SSComposeInfoBar] with SVG Background for demo purposes.
+ *
+ * @param title Title string for the [SSComposeInfoBar].
+ * @param background of type [Painter].
+ * @param description Description string for the [SSComposeInfoBar].
+ * @param isInfinite Flag that decides whether [SSComposeInfoBar]'s duration is infinite.
+ * @param shape Shape of the [SSComposeInfoBar].
+ * @param onClose Called when user clicks on the clear button on the [SSComposeInfoBar].
+ */
+@Composable
+private fun DummyInfobarWithSVGBackground(
+    title: TextType,
+    description: TextType,
+    background: Painter,
+    isInfinite: Boolean,
+    shape: Shape,
+    onClose: () -> Unit
+) {
+    SSComposeInfoBar(
+        title = title,
+        description = description,
+        customBackground = background.toSSCustomBackground(),
+        contentColors = SSComposeInfoBarColors(
+            iconColor = Color.Black,
+            titleColor = Color.Black,
+            descriptionColor = Color.Black,
+            dismissIconColor = Color.Black
+        ),
+        shape = shape,
+        isInfinite = isInfinite,
+        onCloseClicked = onClose
+    )
+}
+
+/**
+ * Dummy [SSComposeInfoBar] with Gradient Background Using Brush for demo purposes.
+ *
+ * @param title Title string for the [SSComposeInfoBar].
+ * @param description Description string for the [SSComposeInfoBar].
+ * @param background Background of type [Brush] to be applied to [SSComposeInfoBar].
+ * @param isInfinite Flag that decides whether [SSComposeInfoBar]'s duration is infinite.
+ * @param shape Shape of the [SSComposeInfoBar].
+ * @param onClose Called when user clicks on the clear button on the [SSComposeInfoBar].
+ */
+@Composable
+private fun DummyGradientBrushDemo(
+    title: TextType,
+    description: TextType,
+    background: Brush,
+    isInfinite: Boolean,
+    shape: Shape,
+    onClose: () -> Unit
+) {
+    SSComposeInfoBar(
+        title = title,
+        description = description,
+        customBackground = background.toSSCustomBackground(),
+        contentColors = SSComposeInfoBarColors(
+            iconColor = Color.White,
+            titleColor = Color.White,
+            descriptionColor = Color.White,
+            dismissIconColor = Color.White
+        ),
+        shape = shape,
+        isInfinite = isInfinite,
         onCloseClicked = onClose
     )
 }

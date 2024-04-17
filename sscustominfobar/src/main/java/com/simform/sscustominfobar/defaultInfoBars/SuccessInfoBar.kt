@@ -12,6 +12,7 @@ import com.simform.sscustominfobar.main.SSComposeInfoBar
 import com.simform.sscustominfobar.main.SSComposeInfoBarColors
 import com.simform.sscustominfobar.main.SSComposeInfoBarData
 import com.simform.sscustominfobar.main.SSComposeInfoBarDefaults
+import com.simform.sscustominfobar.main.toSSCustomBackground
 import com.simform.sscustominfobar.res.successGreen
 import com.simform.sscustominfobar.res.white
 
@@ -46,9 +47,12 @@ fun SuccessInfoBar(
         description = successData.description,
         shape = shape,
         icon = icon,
-        colors = SSComposeInfoBarColors(
-            containerColor = successBackgroundColor,
-            contentColor = successContentColor
+        customBackground = successBackgroundColor.toSSCustomBackground(),
+        contentColors = SSComposeInfoBarColors(
+            iconColor = successContentColor,
+            titleColor = successContentColor,
+            descriptionColor = successContentColor,
+            dismissIconColor = successContentColor
         ),
         onCloseClicked = onCloseClicked,
         isInfinite = isInfinite
