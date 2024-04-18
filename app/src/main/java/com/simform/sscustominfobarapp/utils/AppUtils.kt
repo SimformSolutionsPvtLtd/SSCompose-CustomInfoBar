@@ -1,5 +1,6 @@
 package com.simform.sscustominfobarapp.utils
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Brush
@@ -8,6 +9,9 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import com.simform.sscustominfobar.defaultInfoBars.ErrorInfoBar
 import com.simform.sscustominfobar.defaultInfoBars.SuccessInfoBar
 import com.simform.sscustominfobar.defaultInfoBars.WarningInfoBar
@@ -18,6 +22,7 @@ import com.simform.sscustominfobar.main.SSComposeInfoDuration
 import com.simform.sscustominfobar.main.SSComposeInfoHostState
 import com.simform.sscustominfobar.main.toSSCustomBackground
 import com.simform.sscustominfobar.utils.TextType
+import com.simform.sscustominfobar.utils.toTextType
 import com.simform.sscustominfobarapp.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -139,6 +144,83 @@ fun InfoBarByButtonType(
             shape = shape,
             onClose = onClose
         )
+    }
+}
+
+fun getButtonTitle(buttonType: ButtonType): Int {
+    return when (buttonType) {
+        ButtonType.Default -> R.string.show_default_info_bar
+        ButtonType.Error -> R.string.show_error_info_bar
+        ButtonType.Warning -> R.string.show_warning_info_bar
+        ButtonType.Success -> R.string.show_success_info_bar
+        ButtonType.GradientDemoBrush -> R.string.gradient_demo_using_brush
+        ButtonType.DrawableDemoSVG -> R.string.drawable_demo_using_svg
+        ButtonType.DrawableDemoPNG -> R.string.drawable_demo_using_png
+        ButtonType.AnnotatedText -> R.string.show_annotated_text_info_bar
+        ButtonType.ActionInfoBar -> R.string.show_composeinfobar_with_action
+    }
+}
+
+private val titleAnnotated = buildAnnotatedString {
+    withStyle(SpanStyle(color = Color.Red)) {
+        append("Hello")
+    }
+    withStyle(SpanStyle(color = Color.Blue)) {
+        append("World")
+    }
+}
+private val descAnnotated = buildAnnotatedString {
+    withStyle(SpanStyle(color = Color.Blue, fontSize = AppDimens.SpMedium)) {
+        append("This")
+    }
+    withStyle(SpanStyle(color = Color.Red, fontSize = AppDimens.SpMedium)) {
+        append(" is")
+    }
+    withStyle(SpanStyle(color = Color.White, fontSize = AppDimens.SpMedium)) {
+        append(" an annotated string")
+    }
+}
+
+/**
+ * Utility Function to get InfoBar title.
+ *
+ * @param context [Context]
+ * @param buttonType [ButtonType]
+ * @return
+ */
+fun getInfoBarTitle(context: Context, buttonType: ButtonType): TextType {
+    return when (buttonType) {
+        ButtonType.Default -> context.getString(R.string.hey_user_good_morning).toTextType()
+        ButtonType.Error -> context.getString(R.string.error).toTextType()
+        ButtonType.Warning -> context.getString(R.string.warning).toTextType()
+        ButtonType.Success -> context.getString(R.string.success).toTextType()
+        ButtonType.GradientDemoBrush -> context.getString(R.string.success).toTextType()
+        ButtonType.DrawableDemoSVG -> context.getString(R.string.success).toTextType()
+        ButtonType.DrawableDemoPNG -> context.getString(R.string.success).toTextType()
+        ButtonType.AnnotatedText -> titleAnnotated.toTextType()
+        ButtonType.ActionInfoBar -> context.getString(R.string.sscomposeinfobar_with_action)
+            .toTextType()
+    }
+}
+
+/**
+ * Utility Function to get InfoBar description.
+ *
+ * @param context [Context]
+ * @param buttonType [ButtonType]
+ * @return
+ */
+fun getInfoBarDescription(context: Context, buttonType: ButtonType): TextType? {
+    return when (buttonType) {
+        ButtonType.Default -> context.getString(R.string.we_hope_you_are_doing_well_in_your_life).toTextType()
+        ButtonType.Error -> context.getString(R.string.failed_to_fetch_data_from_the_server).toTextType()
+        ButtonType.Warning -> context.getString(R.string.trying_to_access_sensitive_information).toTextType()
+        ButtonType.Success -> context.getString(R.string.successfully_fetched_network_data).toTextType()
+        ButtonType.GradientDemoBrush -> context.getString(R.string.successfully_fetched_network_data).toTextType()
+        ButtonType.DrawableDemoSVG -> context.getString(R.string.successfully_fetched_network_data).toTextType()
+        ButtonType.DrawableDemoPNG -> context.getString(R.string.successfully_fetched_network_data).toTextType()
+        ButtonType.AnnotatedText -> descAnnotated.toTextType()
+        ButtonType.ActionInfoBar -> null
     }
 }
 

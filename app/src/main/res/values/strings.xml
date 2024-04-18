@@ -20,11 +20,6 @@
     <string name="show_success_info_bar">Show Success ComposeInfoBar</string>
     <string name="success">Success!!</string>
     <string name="successfully_fetched_network_data">Successfully fetched network data.</string>
-    <string name="hello">Hello</string>
-    <string name="world">" World"</string>
-    <string name="ss_compose_info_bar">" SSComposeInfoBar"</string>
-    <string name="love">" Love"</string>
-    <string name="i">I</string>
     <string name="show_annotated_text_info_bar">Show Annotated Text Info Bar</string>
     <string name="drawable_demo_using_svg">Drawable Demo Using SVG</string>
     <string name="gradient_demo_using_brush">Gradient Demo using brush</string>
