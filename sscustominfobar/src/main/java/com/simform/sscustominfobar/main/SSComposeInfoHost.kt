@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
@@ -113,6 +114,12 @@ enum class SSComposeInfoBarDirection(internal val alignment: Alignment) {
  * This state is usually [remember]ed and used to provide to a [SSComposeInfoHost].
  */
 class SSComposeInfoHostState {
+    internal var previousState = Hidden
+    internal var onDismissCallback: (() -> Unit)? = null
+    fun setOnInfoBarDismiss(callback: () -> Unit) {
+        onDismissCallback = callback
+    }
+
     /**
      * [MutableTransitionState] which is used internally by [SSComposeInfoHost] to show and hide [SSComposeInfoBar]
      */
@@ -160,6 +167,7 @@ class SSComposeInfoHostState {
      */
     fun dismiss() {
         visibilityState.targetState = Hidden.value
+        previousState = Visible
     }
 
     /**
@@ -181,6 +189,7 @@ class SSComposeInfoHostState {
                     // Wait for the given duration
                     delay(duration.toMillis())
                     visibilityState.targetState = Hidden.value
+                    previousState = Visible
                 }
             }
             return
@@ -188,6 +197,7 @@ class SSComposeInfoHostState {
         // Executes this if the visibility duration is Indefinite
         _isInfinite.value = true
         visibilityState.targetState = Visible.value
+        previousState = Hidden
     }
 
     /**
@@ -338,6 +348,15 @@ fun SSComposeInfoHost(
     composeHostState.setDirection(direction)
     val exitAnimation = getExitAnimation(composeHostState.direction.value)
     val enterAnimation = getEnterAnimation(composeHostState.direction.value)
+
+    // For dismiss callback
+    LaunchedEffect(key1 = composeHostState.isVisible) {
+        // Here we are checking whether the info bar was first visible and then it went into dismissed state
+        // This will help in when we don't want the callback to be called initially when the infoBar is not visible and the launched is called initially.
+        if (composeHostState.previousState == Visible && !composeHostState.isVisible) {
+            composeHostState.onDismissCallback?.let { it() }
+        }
+    }
 
     // For network monitoring
     val context = LocalContext.current

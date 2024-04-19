@@ -1,5 +1,6 @@
 package com.simform.sscustominfobarapp.home
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -112,6 +113,13 @@ fun SSCustomInfoBarHome() {
     }
     var direction by remember {
         mutableStateOf((SSComposeInfoBarDirection.Top))
+    }
+    composeInfoHostState.setOnInfoBarDismiss {
+        Toast.makeText(
+            context,
+            context.getString(R.string.info_bar_dismissed_successfully),
+            Toast.LENGTH_SHORT
+        ).show()
     }
     Box(modifier = Modifier.fillMaxSize()) {
         SSComposeInfoHost(
