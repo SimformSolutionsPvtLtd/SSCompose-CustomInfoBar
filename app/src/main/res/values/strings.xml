@@ -27,4 +27,5 @@
     <string name="show_composeinfobar_with_action">Show ComposeInfoBar with action</string>
     <string name="sscomposeinfobar_with_action">InfoBar with Action</string>
     <string name="action_clicked">Action Clicked</string>
+    <string name="info_bar_dismissed_successfully">Info Bar Dismissed Successfully!!</string>
 </resources>
