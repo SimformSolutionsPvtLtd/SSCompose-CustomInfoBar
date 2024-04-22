@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.simform.sscustominfobar.R
+import com.simform.sscustominfobar.animation.AnimationType
 import com.simform.sscustominfobar.animation.getAnimatedOffset
 import com.simform.sscustominfobar.animation.getEnterAnimation
 import com.simform.sscustominfobar.animation.getExitAnimation
@@ -330,6 +331,7 @@ object SSComposeInfoBarShapes {
  * @param modifier The Modifier to be applied to [SSComposeInfoHost].
  * @param composeHostState The state of the current [SSComposeInfoHost].
  * @param direction The direction from which the [SSComposeInfoBar] will be shown.
+ * @param animationType The Animation with the [SSComposeInfoBar] will be shown.
  * @param contentScrollState The LazyListState which wil be used to show and hide the [SSComposeInfoBar] on scrolling.
  * @param enableNetworkMonitoring The flag that will decide whether the network monitoring feature is enabled or not.
  * @param composeInfoBar The [SSComposeInfoBar] that will be displayed in [SSComposeInfoHost].
@@ -340,14 +342,15 @@ fun SSComposeInfoHost(
     modifier: Modifier = Modifier,
     composeHostState: SSComposeInfoHostState,
     direction: SSComposeInfoBarDirection = Top,
+    animationType: AnimationType = AnimationType.SlideVertically,
     contentScrollState: LazyListState? = null,
     enableNetworkMonitoring: Boolean = false,
     composeInfoBar: @Composable (SSComposeInfoBarData) -> Unit,
     content: @Composable () -> Unit
 ) {
     composeHostState.setDirection(direction)
-    val exitAnimation = getExitAnimation(composeHostState.direction.value)
-    val enterAnimation = getEnterAnimation(composeHostState.direction.value)
+    val exitAnimation = getExitAnimation(composeHostState.direction.value, animationType)
+    val enterAnimation = getEnterAnimation(composeHostState.direction.value, animationType)
 
     // For dismiss callback
     LaunchedEffect(key1 = composeHostState.isVisible) {
@@ -437,6 +440,7 @@ fun SSComposeInfoHost(
  * @param modifier The Modifier to be applied to [SSComposeInfoHost].
  * @param composeHostState The state of the current [SSComposeInfoHost].
  * @param direction The direction from which the [SSComposeInfoBar] will be shown.
+ * @param animationType The Animation with the [SSComposeInfoBar] will be shown.
  * @param contentScrollState The LazyListState which wil be used to show and hide the [SSComposeInfoBar] on scrolling.
  * @param enableNetworkMonitoring The flag that will decide whether the network monitoring feature is enabled or not.
  * @param content content of the screen on which the [SSComposeInfoBar] will be shown.
@@ -446,13 +450,14 @@ fun SSComposeInfoHost(
     modifier: Modifier = Modifier,
     composeHostState: SSComposeInfoHostState,
     direction: SSComposeInfoBarDirection = Top,
+    animationType: AnimationType = AnimationType.SlideVertically,
     contentScrollState: LazyListState? = null,
     enableNetworkMonitoring: Boolean = false,
     content: @Composable () -> Unit
 ) {
     composeHostState.setDirection(direction)
-    val exitAnimation = getExitAnimation(composeHostState.direction.value)
-    val enterAnimation = getEnterAnimation(composeHostState.direction.value)
+    val exitAnimation = getExitAnimation(composeHostState.direction.value, animationType)
+    val enterAnimation = getEnterAnimation(composeHostState.direction.value, animationType)
 
     // For network monitoring
     val context = LocalContext.current
