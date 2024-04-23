@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -76,6 +78,8 @@ data class SSComposeInfoBarColors(
  * @param contentColors The [SSComposeInfoBarColors] that represents the container and content color used in [SSComposeInfoBar].
  * @param contentPadding The [PaddingValues] that will be used to give padding to the contents of the [SSComposeInfoBar].
  * @param height The Height of the [SSComposeInfoBar].
+ * @param actionText The text of the Action in the [SSComposeInfoBar].
+ * @param onActionClicked Called when the user clicks the action button.
  * @param onCloseClicked Called when the user clicks the clear button on [SSComposeInfoBar].
  * @param isInfinite The flag that denotes whether the [SSComposeInfoBar]'s Display Duration is infinite or not, based on this flag the clear button will be shown and hidden.
  */
@@ -93,6 +97,8 @@ fun SSComposeInfoBar(
     contentColors: SSComposeInfoBarColors = SSComposeInfoBarDefaults.colors,
     contentPadding: PaddingValues = SSComposeInfoBarDefaults.contentPadding,
     height: Dp = SSComposeInfoBarDefaults.defaultHeight,
+    actionText: String = SSComposeInfoBarDefaults.defaultActionTitle,
+    onActionClicked: (() -> Unit)? = null,
     onCloseClicked: () -> Unit = {},
     isInfinite: Boolean = false
 ) {
@@ -168,6 +174,11 @@ fun SSComposeInfoBar(
                         overflow = TextOverflow.Ellipsis,
                         color = contentColors.descriptionColor
                     )
+                }
+            }
+            if (onActionClicked != null) {
+                ElevatedButton(onClick = onActionClicked) {
+                    Text(text = actionText)
                 }
             }
             if (isInfinite) {
