@@ -274,6 +274,19 @@ fun SSCustomInfoBarHome() {
                         )
                     }
                 }
+                CustomHomeButton(
+                    title = stringResource(R.string.show_composeinfobar_with_action),
+                    buttonType = ButtonType.ActionInfoBar
+                ) { btnType ->
+                    if (!composeInfoHostState.isVisible) {
+                        buttonType = btnType
+                        coroutineScope.showSSComposeInfoBar(
+                            context.getString(R.string.sscomposeinfobar_with_action).toTextType(),
+                            composeInfoHostState = composeInfoHostState,
+                            duration = duration
+                        )
+                    }
+                }
             }
         }
         AnimatedVisibility(visible = shouldShowSettingDialog) {

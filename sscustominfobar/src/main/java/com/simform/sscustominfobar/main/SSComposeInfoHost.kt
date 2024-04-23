@@ -29,7 +29,7 @@ import com.simform.sscustominfobar.main.SSComposeInfoDuration.Long
 import com.simform.sscustominfobar.main.SSComposeInfoDuration.Short
 import com.simform.sscustominfobar.res.Dimens
 import com.simform.sscustominfobar.res.Dimens.DpEighty
-import com.simform.sscustominfobar.res.Dimens.DpLarge
+import com.simform.sscustominfobar.res.Dimens.DpMedium
 import com.simform.sscustominfobar.res.Dimens.DpSmall
 import com.simform.sscustominfobar.res.Dimens.DpTwelve
 import com.simform.sscustominfobar.res.Dimens.DpZero
@@ -54,7 +54,7 @@ private const val DESC_MAX_LINE = 2
  */
 data class SSComposeInfoBarData(
     val title: TextType,
-    val description: TextType
+    val description: TextType? = null
 )
 
 /**
@@ -203,8 +203,10 @@ object SSComposeInfoBarDefaults {
     /**
      * Default horizontalPadding and verticalPadding.
      */
-    private val ComposeInfoBarHorizontalPadding = DpLarge
+    private val ComposeInfoBarHorizontalPadding = DpMedium
     private val ComposeInfoBarVerticalPadding = DpSmall
+
+    val defaultActionTitle = "Action"
 
     /**
      * Default content padding for [SSComposeInfoBar].

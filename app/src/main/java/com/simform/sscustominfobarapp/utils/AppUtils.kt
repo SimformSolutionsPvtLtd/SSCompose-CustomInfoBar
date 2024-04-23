@@ -1,10 +1,12 @@
 package com.simform.sscustominfobarapp.utils
 
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import com.simform.sscustominfobar.defaultInfoBars.ErrorInfoBar
 import com.simform.sscustominfobar.defaultInfoBars.SuccessInfoBar
@@ -36,6 +38,7 @@ enum class ButtonType {
     GradientDemoBrush,
     DrawableDemoSVG,
     DrawableDemoPNG,
+    ActionInfoBar
 }
 
 /**
@@ -128,7 +131,46 @@ fun InfoBarByButtonType(
             shape = shape,
             onClose = onClose
         )
+
+        ButtonType.ActionInfoBar -> DummyInfoBarWithAction(
+            title = content.title,
+            description = content.description,
+            isInfinite = isInfinite,
+            shape = shape,
+            onClose = onClose
+        )
     }
+}
+
+/**
+ * Dummy InfoBar to show [SSComposeInfoBar] with action.
+ *
+ * @param title Title string for the [SSComposeInfoBar].
+ * @param description Description string for the [SSComposeInfoBar].
+ * @param isInfinite Flag that decides whether [SSComposeInfoBar]'s duration is infinite.
+ * @param shape Shape of the [SSComposeInfoBar].
+ * @param onClose Called when user clicks on the clear button on the [SSComposeInfoBar].
+ */
+@Composable
+private fun DummyInfoBarWithAction(
+    title: TextType,
+    description: TextType? = null,
+    isInfinite: Boolean,
+    shape: Shape,
+    onClose: () -> Unit
+) {
+    val context = LocalContext.current
+    SSComposeInfoBar(
+        title = title,
+        description = description,
+        isInfinite = isInfinite,
+        shape = shape,
+        onCloseClicked = onClose,
+        onActionClicked = {
+            Toast.makeText(context, context.getString(R.string.action_clicked), Toast.LENGTH_SHORT)
+                .show()
+        }
+    )
 }
 
 /**
@@ -143,7 +185,7 @@ fun InfoBarByButtonType(
 @Composable
 private fun DummyDefaultInfoBar(
     title: TextType,
-    description: TextType,
+    description: TextType? = null,
     isInfinite: Boolean,
     shape: Shape,
     onClose: () -> Unit
@@ -171,7 +213,7 @@ private fun DummyDefaultInfoBar(
 @Composable
 private fun DummyInfoBarWithDrawableBackground(
     title: TextType,
-    description: TextType,
+    description: TextType? = null,
     background: Painter,
     isInfinite: Boolean,
     shape: Shape,
@@ -206,7 +248,7 @@ private fun DummyInfoBarWithDrawableBackground(
 @Composable
 private fun DummyInfobarWithSVGBackground(
     title: TextType,
-    description: TextType,
+    description: TextType? = null,
     background: Painter,
     isInfinite: Boolean,
     shape: Shape,
@@ -241,7 +283,7 @@ private fun DummyInfobarWithSVGBackground(
 @Composable
 private fun DummyGradientBrushDemo(
     title: TextType,
-    description: TextType,
+    description: TextType? = null,
     background: Brush,
     isInfinite: Boolean,
     shape: Shape,
@@ -277,7 +319,7 @@ private fun DummyGradientBrushDemo(
  */
 fun CoroutineScope.showSSComposeInfoBar(
     title: TextType,
-    description: TextType,
+    description: TextType? = null,
     composeInfoHostState: SSComposeInfoHostState,
     duration: SSComposeInfoDuration,
     context: CoroutineContext = EmptyCoroutineContext,
