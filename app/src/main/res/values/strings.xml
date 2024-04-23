@@ -29,4 +29,7 @@
     <string name="drawable_demo_using_svg">Drawable Demo Using SVG</string>
     <string name="gradient_demo_using_brush">Gradient Demo using brush</string>
     <string name="drawable_demo_using_png">Drawable demo using PNG</string>
+    <string name="show_composeinfobar_with_action">Show ComposeInfoBar with action</string>
+    <string name="sscomposeinfobar_with_action">InfoBar with Action</string>
+    <string name="action_clicked">Action Clicked</string>
 </resources>
