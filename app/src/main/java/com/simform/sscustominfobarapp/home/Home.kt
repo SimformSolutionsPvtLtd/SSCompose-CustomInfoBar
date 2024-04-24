@@ -44,6 +44,8 @@ import com.simform.sscustominfobarapp.utils.getButtonTitle
 import com.simform.sscustominfobarapp.utils.getInfoBarDescription
 import com.simform.sscustominfobarapp.utils.getInfoBarTitle
 import com.simform.sscustominfobarapp.utils.showSSComposeInfoBar
+import java.util.LinkedList
+import java.util.Queue
 
 /**
  * Custom Button used in home screen of the demo.
@@ -114,7 +116,14 @@ fun SSCustomInfoBarHome() {
     var direction by remember {
         mutableStateOf((SSComposeInfoBarDirection.Top))
     }
+    val btnTypeQueue: Queue<ButtonType> = remember {
+        LinkedList()
+    }
     composeInfoHostState.setOnInfoBarDismiss {
+        btnTypeQueue.remove()
+        if (btnTypeQueue.isNotEmpty()) {
+            buttonType = btnTypeQueue.element()
+        }
         Toast.makeText(
             context,
             context.getString(R.string.info_bar_dismissed_successfully),
@@ -161,8 +170,13 @@ fun SSCustomInfoBarHome() {
                     ) { btnType ->
                         val title = getInfoBarTitle(context, btnType)
                         val desc = getInfoBarDescription(context, btnType)
-                        if (!composeInfoHostState.isVisible) {
+
+                        // This if and else logic is only required because of demo's purpose and not related to library.
+                        if (btnTypeQueue.isNotEmpty()) {
+                            btnTypeQueue.add(btnType)
+                        } else {
                             buttonType = btnType
+                            btnTypeQueue.add(btnType)
                         }
                         coroutineScope.showSSComposeInfoBar(
                             title = title,
