@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.simform.sscustominfobar.R
 import com.simform.sscustominfobar.animation.AnimationType
+import com.simform.sscustominfobar.animation.DefaultAnimationDuration
 import com.simform.sscustominfobar.animation.getAnimatedOffset
 import com.simform.sscustominfobar.animation.getEnterAnimation
 import com.simform.sscustominfobar.animation.getExitAnimation
@@ -54,9 +55,9 @@ import com.simform.sscustominfobar.utils.rememberDirectionalLazyListState
 import com.simform.sscustominfobar.utils.swipeable
 import com.simform.sscustominfobar.utils.toMillis
 import com.simform.sscustominfobar.utils.toTextType
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import java.util.LinkedList
+import java.util.Queue
 
 /**
  * Max num of lines for description and title in [SSComposeInfoBar]
@@ -121,6 +122,11 @@ class SSComposeInfoHostState {
         onDismissCallback = callback
     }
 
+    // TODO: If everything goes fine add one parameter in the class's constructor for the queue
+    //  size and then use that here to create a fixed size linked list.
+    private var infoBarDataQueue: Queue<SSComposeInfoBarData> = LinkedList()
+    private var isQueueBeingProcessed = false
+
     /**
      * [MutableTransitionState] which is used internally by [SSComposeInfoHost] to show and hide [SSComposeInfoBar]
      */
@@ -139,7 +145,7 @@ class SSComposeInfoHostState {
     /**
      * Private backing property for isInfinite.
      */
-    private var _isInfinite = mutableStateOf(false)
+    internal var _isInfinite = mutableStateOf(false)
 
     /**
      * A read only [State] property of type [Boolean] which is used to represent whether the current [SSComposeInfoBar]'s Duration is Infinite or not.
@@ -172,36 +178,6 @@ class SSComposeInfoHostState {
     }
 
     /**
-     * A private suspend function that is used to toggle the [visibilityState] based on the input parameters.
-     *
-     * @param isTimed Optional Flag that denotes whether the [SSComposeInfoBar] is Visible for only some time or Visible Infinitely.
-     * @param duration Optional [SSComposeInfoDuration] that will be used to show [SSComposeInfoBar] for that amount of time.
-     */
-    private suspend fun toggleVisibility(
-        isTimed: Boolean = false,
-        duration: SSComposeInfoDuration = Indefinite
-    ) {
-        if (isTimed) {
-            // Executes this if the visibility duration is either Long or Short and not Indefinite.
-            coroutineScope {
-                launch {
-                    _isInfinite.value = false
-                    visibilityState.targetState = Visible.value
-                    // Wait for the given duration
-                    delay(duration.toMillis())
-                    visibilityState.targetState = Hidden.value
-                    previousState = Visible
-                }
-            }
-            return
-        }
-        // Executes this if the visibility duration is Indefinite
-        _isInfinite.value = true
-        visibilityState.targetState = Visible.value
-        previousState = Hidden
-    }
-
-    /**
      * This suspend function is used to show [SSComposeInfoBar] in [SSComposeInfoHost].
      *
      * @param infoBarData [SSComposeInfoBarData] which will be used to display content(title, description) in [SSComposeInfoBar].
@@ -211,13 +187,31 @@ class SSComposeInfoHostState {
         infoBarData: SSComposeInfoBarData,
         duration: SSComposeInfoDuration
     ) {
-        // This checks whether the current SSComposeInfoBar is not visible and the visibility state is idle(not running any animation).
-        if (!isVisible && visibilityState.isIdle) {
-            _currentComposeInfoBarData.value = infoBarData
-            if (duration == Indefinite) {
-                toggleVisibility()
-            } else {
-                toggleVisibility(isTimed = true, duration = duration)
+        if (duration == Indefinite) {
+            if (!isVisible) {
+                _currentComposeInfoBarData.value = infoBarData
+                _isInfinite.value = true
+                visibilityState.targetState = Visible.value
+                previousState = Hidden
+            }
+        } else {
+            if (!isInfinite.value) {
+                infoBarDataQueue.add(infoBarData)
+                if (!isQueueBeingProcessed) {
+                    isQueueBeingProcessed = true
+                    while (infoBarDataQueue.isNotEmpty()) {
+                        _currentComposeInfoBarData.value = infoBarDataQueue.remove()
+                        visibilityState.targetState = Visible.value
+                        // Wait for the given duration
+                        delay(duration.toMillis())
+                        visibilityState.targetState = Hidden.value
+                        previousState = Visible
+                        // Here we are using the default value of exit animation but when we will give custom animations we will have to use that duration.
+                        // Store that exit animation in the SSComposeHostState.
+                        delay(DefaultAnimationDuration.toLong())
+                    }
+                    isQueueBeingProcessed = false
+                }
             }
         }
     }
@@ -233,6 +227,9 @@ object SSComposeInfoBarDefaults {
     private val ComposeInfoBarHorizontalPadding = DpMedium
     private val ComposeInfoBarVerticalPadding = DpSmall
 
+    /**
+     * Default action title
+     */
     val defaultActionTitle = "Action"
 
     /**
@@ -253,8 +250,8 @@ object SSComposeInfoBarDefaults {
     /**
      * Default Max lines for description and title in [SSComposeInfoBar].
      */
-    internal val descriptionMaxLine = DESC_MAX_LINE
-    internal val titleMaxLine = TITLE_MAX_LINE
+    internal const val descriptionMaxLine = DESC_MAX_LINE
+    internal const val titleMaxLine = TITLE_MAX_LINE
 
     /**
      * Default [Shape] of [SSComposeInfoBar].
@@ -358,6 +355,9 @@ fun SSComposeInfoHost(
         // This will help in when we don't want the callback to be called initially when the infoBar is not visible and the launched is called initially.
         if (composeHostState.previousState == Visible && !composeHostState.isVisible) {
             composeHostState.onDismissCallback?.let { it() }
+            if (composeHostState.isInfinite.value) {
+                composeHostState._isInfinite.value = false
+            }
         }
     }
 
@@ -458,6 +458,18 @@ fun SSComposeInfoHost(
     composeHostState.setDirection(direction)
     val exitAnimation = getExitAnimation(composeHostState.direction.value, animationType)
     val enterAnimation = getEnterAnimation(composeHostState.direction.value, animationType)
+
+    // For dismiss callback
+    LaunchedEffect(key1 = composeHostState.isVisible) {
+        // Here we are checking whether the info bar was first visible and then it went into dismissed state
+        // This will help in when we don't want the callback to be called initially when the infoBar is not visible and the launched is called initially.
+        if (composeHostState.previousState == Visible && !composeHostState.isVisible) {
+            composeHostState.onDismissCallback?.let { it() }
+            if (composeHostState.isInfinite.value) {
+                composeHostState._isInfinite.value = false
+            }
+        }
+    }
 
     // For network monitoring
     val context = LocalContext.current
