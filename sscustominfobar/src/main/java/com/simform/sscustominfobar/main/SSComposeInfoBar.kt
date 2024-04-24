@@ -35,11 +35,6 @@ import com.simform.sscustominfobar.res.Dimens.DpThirtyFour
 import com.simform.sscustominfobar.utils.TextType
 
 /**
- * Max num of lines for title in [SSComposeInfoBar]
- */
-private const val TITLE_MAX_LINE = 1
-
-/**
  * Wrapper data class for elevations used in [SSComposeInfoBar].
  *
  * @property tonalElevation
@@ -161,7 +156,7 @@ fun SSComposeInfoBar(
             ) {
                 CustomText(
                     text = title,
-                    maxLines = TITLE_MAX_LINE,
+                    maxLines = SSComposeInfoBarDefaults.titleMaxLine,
                     overflow = TextOverflow.Ellipsis,
                     style = titleStyle,
                     color = contentColors.titleColor
@@ -170,7 +165,7 @@ fun SSComposeInfoBar(
                     CustomText(
                         text = description,
                         style = descriptionStyle,
-                        maxLines = SSComposeInfoBarDefaults.ssInfoBarDescription,
+                        maxLines = SSComposeInfoBarDefaults.descriptionMaxLine,
                         overflow = TextOverflow.Ellipsis,
                         color = contentColors.descriptionColor
                     )

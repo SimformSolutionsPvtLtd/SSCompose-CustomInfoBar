@@ -2,7 +2,7 @@ package com.simform.sscustominfobar.main
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalTextStyle
@@ -42,9 +42,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * Max num of lines for description in [SSComposeInfoBar]
+ * Max num of lines for description and title in [SSComposeInfoBar]
  */
 private const val DESC_MAX_LINE = 2
+private const val TITLE_MAX_LINE = 2
 
 /**
  * Wrapper data class for information that will be displayed in [SSComposeInfoBar].
@@ -100,7 +101,7 @@ class SSComposeInfoHostState {
     /**
      * [MutableTransitionState] which is used internally by [SSComposeInfoHost] to show and hide [SSComposeInfoBar]
      */
-    var visibilityState = MutableTransitionState(Hidden.value)
+    internal var visibilityState = MutableTransitionState(Hidden.value)
 
     private var _direction = mutableStateOf(Top)
     val direction: State<SSComposeInfoBarDirection> = _direction
@@ -224,9 +225,10 @@ object SSComposeInfoBarDefaults {
     internal val defaultHeight = DpEighty
 
     /**
-     * Default Max line for description in [SSComposeInfoBar].
+     * Default Max lines for description and title in [SSComposeInfoBar].
      */
-    internal val ssInfoBarDescription = DESC_MAX_LINE
+    internal val descriptionMaxLine = DESC_MAX_LINE
+    internal val titleMaxLine = TITLE_MAX_LINE
 
     /**
      * Default [Shape] of [SSComposeInfoBar].
@@ -316,7 +318,7 @@ fun SSComposeInfoHost(
     composeHostState.setDirection(direction)
     val exitAnimation = getExitAnimation(composeHostState.direction.value)
     val enterAnimation = getEnterAnimation(composeHostState.direction.value)
-    BoxWithConstraints(
+    Box(
         modifier = modifier
     ) {
         content()
@@ -356,7 +358,7 @@ fun SSComposeInfoHost(
     composeHostState.setDirection(direction)
     val exitAnimation = getExitAnimation(composeHostState.direction.value)
     val enterAnimation = getEnterAnimation(composeHostState.direction.value)
-    BoxWithConstraints(
+    Box(
         modifier = modifier
     ) {
         content()
