@@ -2,6 +2,7 @@ package com.simform.sscustominfobarapp.utils
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -9,10 +10,12 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import com.simform.sscustominfobar.defaultInfoBars.ErrorInfoBar
+import com.simform.sscustominfobar.defaultInfoBars.SlideToPerformInfoBar
 import com.simform.sscustominfobar.defaultInfoBars.SuccessInfoBar
 import com.simform.sscustominfobar.defaultInfoBars.WarningInfoBar
 import com.simform.sscustominfobar.main.SSComposeInfoBar
@@ -43,7 +46,8 @@ enum class ButtonType {
     GradientDemoBrush,
     DrawableDemoSVG,
     DrawableDemoPNG,
-    ActionInfoBar
+    ActionInfoBar,
+    SlideToPerformAction
 }
 
 /**
@@ -144,6 +148,14 @@ fun InfoBarByButtonType(
             shape = shape,
             onClose = onClose
         )
+
+        ButtonType.SlideToPerformAction -> SlideToPerformInfoBar(
+            actionText = content.title,
+            onActionDoneText = stringResource(R.string.slide_complete).toTextType(),
+            backgroundShape = MaterialTheme.shapes.medium,
+            sliderShape = MaterialTheme.shapes.medium,
+            onSlideComplete = onClose
+        )
     }
 }
 
@@ -158,6 +170,7 @@ fun getButtonTitle(buttonType: ButtonType): Int {
         ButtonType.DrawableDemoPNG -> R.string.drawable_demo_using_png
         ButtonType.AnnotatedText -> R.string.show_annotated_text_info_bar
         ButtonType.ActionInfoBar -> R.string.show_composeinfobar_with_action
+        ButtonType.SlideToPerformAction -> R.string.slide_info_bar_title
     }
 }
 
@@ -200,6 +213,8 @@ fun getInfoBarTitle(context: Context, buttonType: ButtonType): TextType {
         ButtonType.AnnotatedText -> titleAnnotated.toTextType()
         ButtonType.ActionInfoBar -> context.getString(R.string.sscomposeinfobar_with_action)
             .toTextType()
+        ButtonType.SlideToPerformAction -> context.getString(R.string.slide_to_perform_action)
+            .toTextType()
     }
 }
 
@@ -221,6 +236,7 @@ fun getInfoBarDescription(context: Context, buttonType: ButtonType): TextType? {
         ButtonType.DrawableDemoPNG -> context.getString(R.string.successfully_fetched_network_data).toTextType()
         ButtonType.AnnotatedText -> descAnnotated.toTextType()
         ButtonType.ActionInfoBar -> null
+        ButtonType.SlideToPerformAction -> null
     }
 }
 

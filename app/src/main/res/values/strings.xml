@@ -30,4 +30,7 @@
     <string name="info_bar_dismissed_successfully">Info Bar Dismissed Successfully!!</string>
     <string name="swipe_to_dismiss">Swipe to dismiss</string>
     <string name="network_state_observation">Network state observation</string>
+    <string name="slide_to_perform_action">Slide to perform action</string>
+    <string name="slide_info_bar_title">Slide Info Bar Demo</string>
+    <string name="slide_complete">Slide Complete</string>
 </resources>
