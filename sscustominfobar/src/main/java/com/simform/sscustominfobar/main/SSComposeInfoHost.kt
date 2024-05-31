@@ -342,6 +342,7 @@ fun SSComposeInfoHost(
     animationType: AnimationType = AnimationType.SlideVertically,
     contentScrollState: LazyListState? = null,
     enableNetworkMonitoring: Boolean = false,
+    isSwipeToDismissEnabled: Boolean = false,
     composeInfoBar: @Composable (SSComposeInfoBarData) -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -396,7 +397,7 @@ fun SSComposeInfoHost(
             modifier = Modifier
                 .align(composeHostState.direction.value.alignment)
                 .then(
-                    if (composeHostState.isInfinite.value) Modifier.swipeable { composeHostState.dismiss() } else Modifier
+                    if (isSwipeToDismissEnabled && composeHostState.isInfinite.value) Modifier.swipeable { composeHostState.dismiss() } else Modifier
                 )
                 .then(
                     if (directionalLazyListState != null) Modifier
@@ -453,6 +454,7 @@ fun SSComposeInfoHost(
     animationType: AnimationType = AnimationType.SlideVertically,
     contentScrollState: LazyListState? = null,
     enableNetworkMonitoring: Boolean = false,
+    isSwipeToDismissEnabled: Boolean = false,
     content: @Composable () -> Unit
 ) {
     composeHostState.setDirection(direction)
@@ -506,7 +508,7 @@ fun SSComposeInfoHost(
             modifier = Modifier
                 .align(composeHostState.direction.value.alignment)
                 .then(
-                    if (composeHostState.isInfinite.value) Modifier.swipeable { composeHostState.dismiss() } else Modifier
+                    if (isSwipeToDismissEnabled && composeHostState.isInfinite.value) Modifier.swipeable { composeHostState.dismiss() } else Modifier
                 )
                 .then(
                     if (directionalLazyListState != null) Modifier

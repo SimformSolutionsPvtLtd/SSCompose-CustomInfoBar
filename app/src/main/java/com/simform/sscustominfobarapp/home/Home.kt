@@ -1,10 +1,9 @@
 package com.simform.sscustominfobarapp.home
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,10 +14,16 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.simform.sscustominfobar.main.SSComposeInfoBar
 import com.simform.sscustominfobar.main.SSComposeInfoBarDirection
@@ -71,31 +77,44 @@ private fun CustomHomeButton(
 }
 
 /**
- * Custom Action bar created using row to display app title and a setting icon.
+ * Custom Action bar to display app title and a setting icon.
  *
  * @param modifier The [Modifier] that is applied to this Custom action bar.
  * @param onSettingClicked Called when the user clicks on the settings icon.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeActionBar(modifier: Modifier = Modifier, onSettingClicked: () -> Unit) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(text = stringResource(R.string.ss_compose_info_bar_demo))
-        IconButton(onClick = onSettingClicked) {
-            Icon(
-                imageVector = Icons.Outlined.Settings,
-                contentDescription = stringResource(R.string.info_bar_settings)
+    TopAppBar(
+        title = {
+            Text(
+                text = stringResource(R.string.ss_compose_info_bar_demo),
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
             )
-        }
-    }
+        },
+        modifier = modifier,
+        actions = {
+            IconButton(onClick = onSettingClicked) {
+                Icon(
+                    imageVector = Icons.Outlined.Settings,
+                    contentDescription = stringResource(R.string.info_bar_settings),
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+        )
+    )
 }
 
 /**
  * Home Screen for the demonstration of the [SSComposeInfoBar] Library.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SSCustomInfoBarHome() {
     val context = LocalContext.current
@@ -107,7 +126,7 @@ fun SSCustomInfoBarHome() {
     var buttonType by remember {
         mutableStateOf(ButtonType.Default)
     }
-    var shouldShowSettingDialog by remember {
+    var shouldShowSettingSheet by remember {
         mutableStateOf(false)
     }
     var duration by remember {
@@ -118,6 +137,12 @@ fun SSCustomInfoBarHome() {
     }
     val btnTypeQueue: Queue<ButtonType> = remember {
         LinkedList()
+    }
+    var isSwipeToDismissEnabled by remember {
+        mutableStateOf(false)
+    }
+    var isNetworkMonitoringEnabled by remember {
+        mutableStateOf(true)
     }
     composeInfoHostState.setOnInfoBarDismiss {
         btnTypeQueue.remove()
@@ -130,14 +155,27 @@ fun SSCustomInfoBarHome() {
             Toast.LENGTH_SHORT
         ).show()
     }
-    Box(modifier = Modifier.fillMaxSize()) {
+    val sheetState = rememberModalBottomSheetState(true)
+    Scaffold(
+        modifier = Modifier,
+        topBar = {
+            HomeActionBar(
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.primary)
+            ) {
+                shouldShowSettingSheet = shouldShowSettingSheet.not()
+            }
+        }
+    ) {
         SSComposeInfoHost(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(it),
             composeHostState = composeInfoHostState,
             direction = direction,
             contentScrollState = lazyListState,
-            enableNetworkMonitoring = true,
+            enableNetworkMonitoring = isNetworkMonitoringEnabled,
+            isSwipeToDismissEnabled = isSwipeToDismissEnabled,
             composeInfoBar = { content ->
                 InfoBarByButtonType(
                     type = buttonType,
@@ -158,11 +196,6 @@ fun SSCustomInfoBarHome() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(AppDimens.DpMedium)
             ) {
-                item {
-                    HomeActionBar(modifier = Modifier.fillMaxWidth()) {
-                        shouldShowSettingDialog = shouldShowSettingDialog.not()
-                    }
-                }
                 items(ButtonType.entries) { bType ->
                     CustomHomeButton(
                         title = stringResource(id = getButtonTitle(bType)),
@@ -195,19 +228,29 @@ fun SSCustomInfoBarHome() {
                     }
                 }
             }
-            AnimatedVisibility(visible = shouldShowSettingDialog) {
-                SettingDialog(
-                    modifier = Modifier.align(Alignment.Center),
-                    inputDuration = duration,
-                    inputDirection = direction,
-                    onCancel = {
-                        shouldShowSettingDialog = false
+            if (shouldShowSettingSheet) {
+                ModalBottomSheet(
+                    onDismissRequest = {
+                        shouldShowSettingSheet = false
                     },
-                    onConfirm = { selectedDuration, selectedDirection ->
-                        duration = selectedDuration
-                        direction = selectedDirection
-                        shouldShowSettingDialog = false
-                    })
+                    sheetState = sheetState
+                ) {
+                    // Sheet content
+                    SettingBottomSheet(
+                        inputDuration = duration,
+                        inputDirection = direction,
+                        inputSwipeToDismissState = isSwipeToDismissEnabled,
+                        inputNetworkObserverState = isNetworkMonitoringEnabled,
+                        onCancel = { shouldShowSettingSheet = false },
+                        onConfirm = { selectedDuration, selectedDirection, swipeToDismissState, networkObserverState ->
+                            duration = selectedDuration
+                            direction = selectedDirection
+                            isSwipeToDismissEnabled = swipeToDismissState
+                            isNetworkMonitoringEnabled = networkObserverState
+                            shouldShowSettingSheet = false
+                        }
+                    )
+                }
             }
         }
     }
