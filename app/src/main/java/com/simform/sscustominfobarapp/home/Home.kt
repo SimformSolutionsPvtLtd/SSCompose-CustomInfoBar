@@ -123,9 +123,6 @@ fun SSCustomInfoBarHome() {
     }
     val lazyListState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    var buttonType by remember {
-        mutableStateOf(ButtonType.Default)
-    }
     var shouldShowSettingSheet by remember {
         mutableStateOf(false)
     }
@@ -146,9 +143,6 @@ fun SSCustomInfoBarHome() {
     }
     composeInfoHostState.setOnInfoBarDismiss {
         btnTypeQueue.remove()
-        if (btnTypeQueue.isNotEmpty()) {
-            buttonType = btnTypeQueue.element()
-        }
         Toast.makeText(
             context,
             context.getString(R.string.info_bar_dismissed_successfully),
@@ -177,8 +171,9 @@ fun SSCustomInfoBarHome() {
             enableNetworkMonitoring = isNetworkMonitoringEnabled,
             isSwipeToDismissEnabled = isSwipeToDismissEnabled,
             composeInfoBar = { content ->
+                val currentBtnType = btnTypeQueue.element()
                 InfoBarByButtonType(
-                    type = buttonType,
+                    type = currentBtnType,
                     content = content,
                     isInfinite = composeInfoHostState.isInfinite.value,
                     shape = if (composeInfoHostState.direction.value == SSComposeInfoBarDirection.Top) SSComposeInfoBarShapes.roundedBottom else SSComposeInfoBarShapes.roundedTop,
@@ -204,11 +199,11 @@ fun SSCustomInfoBarHome() {
                         val title = getInfoBarTitle(context, btnType)
                         val desc = getInfoBarDescription(context, btnType)
 
-                        // This if and else logic is only required because of demo's purpose and not related to library.
-                        if (btnTypeQueue.isNotEmpty()) {
+                        // NOTE: This if and else logic is only need for demo purposes as we are using multiple themes for infobar with a queue.
+                        if (duration != SSComposeInfoDuration.Indefinite) {
                             btnTypeQueue.add(btnType)
-                        } else {
-                            buttonType = btnType
+                        } else if (btnTypeQueue.isEmpty()) {
+                            // If the duration is infinite then only add the btnType in the queue for the very first time and not again.
                             btnTypeQueue.add(btnType)
                         }
                         coroutineScope.showSSComposeInfoBar(
