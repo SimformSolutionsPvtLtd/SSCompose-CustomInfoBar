@@ -26,6 +26,7 @@ import com.simform.sscustominfobar.main.SSComposeInfoBarDirection
 
 internal const val DefaultHidingAnimationDuration = 300
 internal const val DefaultAnimationDuration = 300
+internal const val ExtraDelayForNewInfoBar = 300L
 
 enum class AnimationType {
     SlideVertically,

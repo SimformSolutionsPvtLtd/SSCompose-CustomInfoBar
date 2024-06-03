@@ -27,6 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.simform.sscustominfobar.R
 import com.simform.sscustominfobar.animation.AnimationType
 import com.simform.sscustominfobar.animation.DefaultAnimationDuration
+import com.simform.sscustominfobar.animation.ExtraDelayForNewInfoBar
 import com.simform.sscustominfobar.animation.getAnimatedOffset
 import com.simform.sscustominfobar.animation.getEnterAnimation
 import com.simform.sscustominfobar.animation.getExitAnimation
@@ -208,7 +209,7 @@ class SSComposeInfoHostState {
                         previousState = Visible
                         // Here we are using the default value of exit animation but when we will give custom animations we will have to use that duration.
                         // Store that exit animation in the SSComposeHostState.
-                        delay(DefaultAnimationDuration.toLong())
+                        delay(DefaultAnimationDuration.toLong() + ExtraDelayForNewInfoBar)
                     }
                     isQueueBeingProcessed = false
                 }
