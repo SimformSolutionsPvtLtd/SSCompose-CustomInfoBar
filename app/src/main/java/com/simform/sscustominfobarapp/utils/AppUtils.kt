@@ -2,6 +2,7 @@ package com.simform.sscustominfobarapp.utils
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Brush
@@ -21,6 +22,7 @@ import com.simform.sscustominfobar.defaultInfoBars.WarningInfoBar
 import com.simform.sscustominfobar.main.SSComposeInfoBar
 import com.simform.sscustominfobar.main.SSComposeInfoBarColors
 import com.simform.sscustominfobar.main.SSComposeInfoBarData
+import com.simform.sscustominfobar.main.SSComposeInfoBarDefaults
 import com.simform.sscustominfobar.main.SSComposeInfoDuration
 import com.simform.sscustominfobar.main.SSComposeInfoHostState
 import com.simform.sscustominfobar.main.toSSCustomBackground
@@ -175,7 +177,7 @@ fun getButtonTitle(buttonType: ButtonType): Int {
 }
 
 private val titleAnnotated = buildAnnotatedString {
-    withStyle(SpanStyle(color = Color.Red)) {
+    withStyle(SpanStyle(color = Color.White)) {
         append("Hello")
     }
     withStyle(SpanStyle(color = Color.Blue)) {
@@ -186,10 +188,10 @@ private val descAnnotated = buildAnnotatedString {
     withStyle(SpanStyle(color = Color.Blue, fontSize = AppDimens.SpMedium)) {
         append("This")
     }
-    withStyle(SpanStyle(color = Color.Red, fontSize = AppDimens.SpMedium)) {
+    withStyle(SpanStyle(color = Color.White, fontSize = AppDimens.SpMedium)) {
         append(" is")
     }
-    withStyle(SpanStyle(color = Color.White, fontSize = AppDimens.SpMedium)) {
+    withStyle(SpanStyle(color = Color.Blue, fontSize = AppDimens.SpMedium)) {
         append(" an annotated string")
     }
 }
@@ -263,6 +265,9 @@ private fun DummyInfoBarWithAction(
         description = description,
         isInfinite = isInfinite,
         shape = shape,
+        contentColors = SSComposeInfoBarDefaults.colors.copy(
+            actionButtonColors = ButtonDefaults.elevatedButtonColors(containerColor = Color.White)
+        ),
         onCloseClicked = onClose,
         onActionClicked = {
             Toast.makeText(context, context.getString(R.string.action_clicked), Toast.LENGTH_SHORT)

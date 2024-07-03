@@ -28,6 +28,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.rounded.ChevronRight
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -63,6 +65,7 @@ import com.simform.sscustominfobar.res.Dimens.DpSixtyFour
 import com.simform.sscustominfobar.res.Dimens.DpSmall
 import com.simform.sscustominfobar.res.Dimens.DpThirtyFour
 import com.simform.sscustominfobar.res.Dimens.SpMedium
+import com.simform.sscustominfobar.res.SliderColor
 import com.simform.sscustominfobar.utils.TextType
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
@@ -89,7 +92,8 @@ data class SSComposeInfoBarColors(
     val iconColor: Color,
     val titleColor: Color,
     val descriptionColor: Color,
-    val dismissIconColor: Color
+    val dismissIconColor: Color,
+    val actionButtonColors: ButtonColors? = null
 )
 
 /**
@@ -213,7 +217,11 @@ fun SSComposeInfoBar(
                 }
             }
             if (onActionClicked != null) {
-                ElevatedButton(onClick = onActionClicked) {
+                ElevatedButton(
+                    onClick = onActionClicked,
+                    colors = contentColors.actionButtonColors
+                        ?: ButtonDefaults.elevatedButtonColors()
+                ) {
                     Text(text = actionText)
                 }
             }
@@ -251,9 +259,9 @@ internal object SlideToPerformActionDefaults {
     val defaultSliderShape @Composable get() = MaterialTheme.shapes.medium
     val defaultElevations = SSComposeInfoBarDefaults.elevations
     val defaultContentPadding = PaddingValues(DpSmall)
-    val defaultSliderIconColor @Composable get() = MaterialTheme.colorScheme.inversePrimary
+    val defaultSliderIconColor @Composable get() = SliderColor
     val defaultSliderBackgroundColor = Color.White
-    val defaultLoadingBackgroundColor @Composable get() = MaterialTheme.colorScheme.inversePrimary
+    val defaultLoadingBackgroundColor @Composable get() = SliderColor
 
     val defaultInfoBarHeight = DpSixtyFour
     val defaultMarginTop = DpSmall

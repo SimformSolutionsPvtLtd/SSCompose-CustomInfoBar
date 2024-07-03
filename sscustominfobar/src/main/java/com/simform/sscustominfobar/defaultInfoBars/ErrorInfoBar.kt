@@ -2,6 +2,7 @@ package com.simform.sscustominfobar.defaultInfoBars
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ErrorOutline
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -52,7 +53,8 @@ fun ErrorInfoBar(
             iconColor = errorContentColor,
             titleColor = errorContentColor,
             descriptionColor = errorContentColor,
-            dismissIconColor = errorContentColor
+            dismissIconColor = errorContentColor,
+            actionButtonColors = ButtonDefaults.elevatedButtonColors()
         ),
         onCloseClicked = onCloseClicked,
         isInfinite = isInfinite

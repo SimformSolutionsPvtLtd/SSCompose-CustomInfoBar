@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import com.simform.sscustominfobar.animation.AnimationType
 import com.simform.sscustominfobar.main.SSComposeInfoBar
 import com.simform.sscustominfobar.main.SSComposeInfoBarDirection
 import com.simform.sscustominfobar.main.SSComposeInfoDuration
@@ -47,16 +50,20 @@ fun SettingBottomSheet(
     modifier: Modifier = Modifier,
     inputDuration: SSComposeInfoDuration,
     inputDirection: SSComposeInfoBarDirection,
+    inputAnimationType: AnimationType,
     inputSwipeToDismissState: Boolean,
     inputNetworkObserverState: Boolean,
     onCancel: () -> Unit,
-    onConfirm: (SSComposeInfoDuration, SSComposeInfoBarDirection, Boolean, Boolean) -> Unit
+    onConfirm: (SSComposeInfoDuration, SSComposeInfoBarDirection, AnimationType, Boolean, Boolean) -> Unit
 ) {
     var selectedDuration by remember {
         mutableStateOf(inputDuration)
     }
     var selectedDirection by remember {
         mutableStateOf(inputDirection)
+    }
+    var selectedAnimationType by remember {
+        mutableStateOf(inputAnimationType)
     }
     var isSwipeToDismissEnabled by remember {
         mutableStateOf(inputSwipeToDismissState)
@@ -65,13 +72,21 @@ fun SettingBottomSheet(
         mutableStateOf(inputNetworkObserverState)
     }
     Surface(modifier.clip(MaterialTheme.shapes.medium)) {
-        Column(Modifier.padding(AppDimens.DpMedium)) {
+        Column(
+            Modifier
+                .padding(AppDimens.DpMedium)
+                .verticalScroll(rememberScrollState())
+        ) {
             DurationSection(selectedOption = selectedDuration) { duration ->
                 selectedDuration = duration
             }
             HorizontalDivider(modifier = Modifier.height(AppDimens.DpMedium))
             DirectionSection(selectedOption = selectedDirection) { direction ->
                 selectedDirection = direction
+            }
+            HorizontalDivider(modifier = Modifier.height(AppDimens.DpMedium))
+            AnimationSection(selectedOption = selectedAnimationType) { animationType ->
+                selectedAnimationType = animationType
             }
             HorizontalDivider(modifier = Modifier.height(AppDimens.DpMedium))
             CustomChipSection(
@@ -90,6 +105,7 @@ fun SettingBottomSheet(
                     onConfirm(
                         selectedDuration,
                         selectedDirection,
+                        selectedAnimationType,
                         isSwipeToDismissEnabled,
                         isNetworkObserverEnabled
                     )
@@ -126,6 +142,25 @@ private fun ButtonRow(
         ) {
             Text(text = stringResource(R.string.confirm))
         }
+    }
+}
+
+/**
+ * [SettingBottomSheet]'s sub composable for selecting animationType of [SSComposeInfoBar].
+ *
+ * @param selectedOption currently selected option on [AnimationType].
+ * @param onOptionSelected called when user selects a new animationType radio button.
+ */
+@Composable
+private fun AnimationSection(
+    selectedOption: AnimationType,
+    onOptionSelected: (animationType: AnimationType) -> Unit
+) {
+    BaseSettingSection(
+        sectionTitle = stringResource(id = R.string.animation),
+        selectedOption = selectedOption.name,
+        optionsList = AnimationType.entries.map { it.name }) { newAnimation ->
+        onOptionSelected(AnimationType.valueOf(newAnimation))
     }
 }
 
