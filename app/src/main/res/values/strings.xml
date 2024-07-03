@@ -5,6 +5,7 @@
     <string name="info_bar_settings">Info Bar Settings</string>
     <string name="ss_compose_info_bar_demo">SSComposeInfoBar Demo</string>
     <string name="duration">Duration</string>
+    <string name="animation">Animation Type</string>
     <string name="direction">Direction</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>

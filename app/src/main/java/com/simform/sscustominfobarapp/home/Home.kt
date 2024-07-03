@@ -1,9 +1,9 @@
 package com.simform.sscustominfobarapp.home
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,10 +33,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.simform.sscustominfobar.animation.AnimationType
 import com.simform.sscustominfobar.main.SSComposeInfoBar
 import com.simform.sscustominfobar.main.SSComposeInfoBarDirection
 import com.simform.sscustominfobar.main.SSComposeInfoBarShapes
@@ -43,6 +46,7 @@ import com.simform.sscustominfobar.main.SSComposeInfoDuration
 import com.simform.sscustominfobar.main.SSComposeInfoHost
 import com.simform.sscustominfobar.main.SSComposeInfoHostState
 import com.simform.sscustominfobarapp.R
+import com.simform.sscustominfobarapp.ui.theme.SimformPink
 import com.simform.sscustominfobarapp.utils.AppDimens
 import com.simform.sscustominfobarapp.utils.ButtonType
 import com.simform.sscustominfobarapp.utils.InfoBarByButtonType
@@ -69,6 +73,7 @@ private fun CustomHomeButton(
     Button(
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.small,
+        colors = ButtonDefaults.buttonColors(contentColor = Color.White, containerColor = SimformPink),
         onClick = {
             onClick(buttonType)
         }) {
@@ -89,7 +94,7 @@ fun HomeActionBar(modifier: Modifier = Modifier, onSettingClicked: () -> Unit) {
         title = {
             Text(
                 text = stringResource(R.string.ss_compose_info_bar_demo),
-                color = MaterialTheme.colorScheme.onPrimary,
+                color = Color.White,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -100,12 +105,12 @@ fun HomeActionBar(modifier: Modifier = Modifier, onSettingClicked: () -> Unit) {
                 Icon(
                     imageVector = Icons.Outlined.Settings,
                     contentDescription = stringResource(R.string.info_bar_settings),
-                    tint = MaterialTheme.colorScheme.onPrimary
+                    tint = Color.White
                 )
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primary,
+            containerColor = SimformPink,
             actionIconContentColor = MaterialTheme.colorScheme.onPrimary
         )
     )
@@ -132,6 +137,9 @@ fun SSCustomInfoBarHome() {
     var direction by remember {
         mutableStateOf((SSComposeInfoBarDirection.Top))
     }
+    var animationType by remember {
+        mutableStateOf((AnimationType.SlideVertically))
+    }
     val btnTypeQueue: Queue<ButtonType> = remember {
         LinkedList()
     }
@@ -155,7 +163,6 @@ fun SSCustomInfoBarHome() {
         topBar = {
             HomeActionBar(
                 modifier = Modifier
-                    .background(MaterialTheme.colorScheme.primary)
             ) {
                 shouldShowSettingSheet = shouldShowSettingSheet.not()
             }
@@ -167,6 +174,7 @@ fun SSCustomInfoBarHome() {
                 .padding(it),
             composeHostState = composeInfoHostState,
             direction = direction,
+            animationType = animationType,
             contentScrollState = lazyListState,
             enableNetworkMonitoring = isNetworkMonitoringEnabled,
             isSwipeToDismissEnabled = isSwipeToDismissEnabled,
@@ -186,8 +194,9 @@ fun SSCustomInfoBarHome() {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(AppDimens.DpMedium),
+                    .padding(horizontal = AppDimens.DpMedium),
                 state = lazyListState,
+                contentPadding = PaddingValues(vertical = AppDimens.DpMedium),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(AppDimens.DpMedium)
             ) {
@@ -234,12 +243,15 @@ fun SSCustomInfoBarHome() {
                     SettingBottomSheet(
                         inputDuration = duration,
                         inputDirection = direction,
+                        inputAnimationType = animationType,
                         inputSwipeToDismissState = isSwipeToDismissEnabled,
                         inputNetworkObserverState = isNetworkMonitoringEnabled,
                         onCancel = { shouldShowSettingSheet = false },
-                        onConfirm = { selectedDuration, selectedDirection, swipeToDismissState, networkObserverState ->
+                        onConfirm = { selectedDuration, selectedDirection, selectedAnimation,
+                                      swipeToDismissState, networkObserverState ->
                             duration = selectedDuration
                             direction = selectedDirection
+                            animationType = selectedAnimation
                             isSwipeToDismissEnabled = swipeToDismissState
                             isNetworkMonitoringEnabled = networkObserverState
                             shouldShowSettingSheet = false

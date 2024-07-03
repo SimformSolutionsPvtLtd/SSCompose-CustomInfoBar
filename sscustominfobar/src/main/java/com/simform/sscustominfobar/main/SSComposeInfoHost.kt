@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -267,7 +268,8 @@ object SSComposeInfoBarDefaults {
             iconColor = MaterialTheme.colorScheme.onPrimary,
             titleColor = MaterialTheme.colorScheme.onPrimary,
             descriptionColor = MaterialTheme.colorScheme.onPrimary,
-            dismissIconColor = MaterialTheme.colorScheme.onPrimary
+            dismissIconColor = MaterialTheme.colorScheme.onPrimary,
+            actionButtonColors = ButtonDefaults.elevatedButtonColors()
         )
 
     /**
