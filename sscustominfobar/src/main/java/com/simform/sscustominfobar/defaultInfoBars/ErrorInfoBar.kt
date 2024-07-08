@@ -1,13 +1,10 @@
 package com.simform.sscustominfobar.defaultInfoBars
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import com.simform.sscustominfobar.main.SSComposeInfoBar
 import com.simform.sscustominfobar.main.SSComposeInfoBarColors
@@ -25,7 +22,6 @@ private val errorContentColor = white
  *
  * @param modifier The modifier which will be applied to the [ErrorInfoBar].
  * @param errorData The [SSComposeInfoBarData] that contains the title and description of the error.
- * @param icon The [ImageVector] that will be shown in [SSComposeInfoBar] for error.
  * @param textStyle The [TextStyle] to be applied to all the text in [SSComposeInfoBar].
  * @param shape The [Shape] of the [ErrorInfoBar].
  * @param onCloseClicked Called when user clicks on the close icon in [SSComposeInfoBar].
@@ -35,7 +31,6 @@ private val errorContentColor = white
 fun ErrorInfoBar(
     modifier: Modifier = Modifier,
     errorData: SSComposeInfoBarData,
-    icon: ImageVector = Icons.Outlined.ErrorOutline,
     textStyle: TextStyle = LocalTextStyle.current,
     shape: Shape = SSComposeInfoBarDefaults.shape,
     onCloseClicked: () -> Unit = {},
@@ -47,7 +42,7 @@ fun ErrorInfoBar(
         titleStyle = textStyle,
         description = errorData.description,
         shape = shape,
-        icon = icon,
+        icon = errorData.icon,
         customBackground = errorBackgroundColor.toSSCustomBackground(),
         contentColors = SSComposeInfoBarColors(
             iconColor = errorContentColor,
