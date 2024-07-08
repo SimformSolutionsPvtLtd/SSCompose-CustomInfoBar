@@ -2,6 +2,11 @@ package com.simform.sscustominfobarapp.utils
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.ErrorOutline
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -9,6 +14,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -80,6 +86,7 @@ fun InfoBarByButtonType(
 
         ButtonType.Error -> ErrorInfoBar(
             errorData = SSComposeInfoBarData(
+                icon = Icons.Outlined.ErrorOutline,
                 title = content.title,
                 description = content.description,
             ),
@@ -90,6 +97,7 @@ fun InfoBarByButtonType(
 
         ButtonType.Warning -> WarningInfoBar(
             warningData = SSComposeInfoBarData(
+                icon = Icons.Outlined.Warning,
                 title = content.title,
                 description = content.description,
             ),
@@ -100,6 +108,7 @@ fun InfoBarByButtonType(
 
         ButtonType.Success -> SuccessInfoBar(
             successData = SSComposeInfoBarData(
+                icon = Icons.Outlined.CheckCircle,
                 title = content.title,
                 description = content.description,
             ),
@@ -423,13 +432,14 @@ private fun DummyGradientBrushDemo(
 fun CoroutineScope.showSSComposeInfoBar(
     title: TextType,
     description: TextType? = null,
+    icon: ImageVector = Icons.Default.Info,
     composeInfoHostState: SSComposeInfoHostState,
     duration: SSComposeInfoDuration,
     context: CoroutineContext = EmptyCoroutineContext,
     start: CoroutineStart = CoroutineStart.DEFAULT
 ) = launch(context, start) {
     composeInfoHostState.show(
-        infoBarData = SSComposeInfoBarData(title, description),
+        infoBarData = SSComposeInfoBarData(title, description, icon),
         duration = duration
     )
 }

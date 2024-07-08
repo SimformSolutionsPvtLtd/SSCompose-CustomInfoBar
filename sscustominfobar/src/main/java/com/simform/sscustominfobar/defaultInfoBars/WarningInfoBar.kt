@@ -1,12 +1,9 @@
 package com.simform.sscustominfobar.defaultInfoBars
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import com.simform.sscustominfobar.main.SSComposeInfoBar
 import com.simform.sscustominfobar.main.SSComposeInfoBarColors
@@ -24,7 +21,6 @@ private val warningContentColor = white
  *
  * @param modifier The modifier which will be applied to the [WarningInfoBar].
  * @param warningData The [SSComposeInfoBarData] that contains the title and description of the warning.
- * @param icon The [ImageVector] that will be shown in [SSComposeInfoBar] for warning.
  * @param textStyle The [TextStyle] to be applied to all the text in [SSComposeInfoBar].
  * @param shape The [Shape] of the [WarningInfoBar].
  * @param onCloseClicked Called when user clicks on the close icon in [SSComposeInfoBar].
@@ -34,7 +30,6 @@ private val warningContentColor = white
 fun WarningInfoBar(
     modifier: Modifier = Modifier,
     warningData: SSComposeInfoBarData,
-    icon: ImageVector = Icons.Outlined.Warning,
     textStyle: TextStyle = LocalTextStyle.current,
     shape: Shape = SSComposeInfoBarDefaults.shape,
     onCloseClicked: () -> Unit = {},
@@ -46,7 +41,7 @@ fun WarningInfoBar(
         titleStyle = textStyle,
         description = warningData.description,
         shape = shape,
-        icon = icon,
+        icon = warningData.icon,
         customBackground = warningBackgroundColor.toSSCustomBackground(),
         contentColors = SSComposeInfoBarColors(
             iconColor = warningContentColor,

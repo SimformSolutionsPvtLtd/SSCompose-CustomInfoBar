@@ -1,13 +1,10 @@
 package com.simform.sscustominfobar.defaultInfoBars
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.SignalWifiConnectedNoInternet4
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import com.simform.sscustominfobar.main.SSComposeInfoBar
 import com.simform.sscustominfobar.main.SSComposeInfoBarData
@@ -17,7 +14,6 @@ import com.simform.sscustominfobar.main.SSComposeInfoBarData
  *
  * @param modifier The modifier which will be applied to the [OfflineInfoBar].
  * @param offlineData The [SSComposeInfoBarData] that contains the title and description of the offlineInfoBar.
- * @param icon The [ImageVector] that will be shown in [SSComposeInfoBar] for offlineInfoBar.
  * @param textStyle The [TextStyle] to be applied to all the text in [SSComposeInfoBar].
  * @param shape The [Shape] of the [OfflineInfoBar].
  */
@@ -25,7 +21,6 @@ import com.simform.sscustominfobar.main.SSComposeInfoBarData
 fun OfflineInfoBar(
     modifier: Modifier = Modifier,
     offlineData: SSComposeInfoBarData,
-    icon: ImageVector = Icons.Outlined.SignalWifiConnectedNoInternet4,
     textStyle: TextStyle = LocalTextStyle.current,
     shape: Shape = RectangleShape
 ) {
@@ -35,6 +30,6 @@ fun OfflineInfoBar(
         titleStyle = textStyle,
         description = offlineData.description,
         shape = shape,
-        icon = icon
+        icon = offlineData.icon
     )
 }
