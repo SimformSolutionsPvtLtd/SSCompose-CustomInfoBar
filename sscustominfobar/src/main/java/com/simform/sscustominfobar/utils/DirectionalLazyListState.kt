@@ -10,12 +10,12 @@ import kotlin.math.absoluteValue
 /**
  * Scroll Threshold To reduce the show/hide behaviour when user scroll very little.
  */
-private const val SCROLL_THRESHOLD = 50
+internal const val SCROLL_THRESHOLD = 50
 
 /**
  * Enum class for direction of Scroll.
  */
-enum class ScrollDirection {
+internal enum class ScrollDirection {
     SettledAtTop, SettleAfterUpScroll, SettledAfterDownScroll,
 }
 
@@ -26,11 +26,12 @@ enum class ScrollDirection {
  * @return [DirectionalLazyListState]
  */
 @Composable
-fun rememberDirectionalLazyListState(
+internal fun rememberDirectionalLazyListState(
     lazyListState: LazyListState,
+    scrollThreshold: Int = SCROLL_THRESHOLD
 ): DirectionalLazyListState {
     return remember {
-        DirectionalLazyListState(lazyListState)
+        DirectionalLazyListState(lazyListState, scrollThreshold)
     }
 }
 
@@ -40,12 +41,18 @@ fun rememberDirectionalLazyListState(
  *
  * @property lazyListState of type [LazyListState].
  */
-class DirectionalLazyListState(
-    private val lazyListState: LazyListState
+internal class DirectionalLazyListState(
+    private val lazyListState: LazyListState,
+    private var scrollThreshold: Int = SCROLL_THRESHOLD
 ) {
     private var positionY = lazyListState.firstVisibleItemScrollOffset
     private var visibleItem = lazyListState.firstVisibleItemIndex
     private var scrollPosition = ScrollDirection.SettledAtTop
+
+    internal fun updateScrollThreshold(threshold: Int) {
+        scrollThreshold = threshold
+    }
+
     val scrollDirection by derivedStateOf {
         if (lazyListState.isScrollInProgress.not()) {
             scrollPosition
@@ -58,7 +65,7 @@ class DirectionalLazyListState(
             if (firstVisibleItemIndex == visibleItem) {
                 val direction = if (firstVisibleItemScrollOffset > positionY) {
                     // Only update the value when the scroll has passed the threshold value.
-                    if ((firstVisibleItemScrollOffset - positionY).absoluteValue > SCROLL_THRESHOLD) {
+                    if ((firstVisibleItemScrollOffset - positionY).absoluteValue > scrollThreshold) {
                         // User scrolls downward
                         scrollPosition =
                             ScrollDirection.SettledAfterDownScroll
@@ -67,7 +74,7 @@ class DirectionalLazyListState(
                     scrollPosition
                 } else {
                     // User scrolls upward
-                    if ((firstVisibleItemScrollOffset - positionY).absoluteValue > SCROLL_THRESHOLD) {
+                    if ((firstVisibleItemScrollOffset - positionY).absoluteValue > scrollThreshold) {
                         scrollPosition =
                             ScrollDirection.SettleAfterUpScroll
                         positionY = firstVisibleItemScrollOffset
@@ -76,7 +83,7 @@ class DirectionalLazyListState(
                 }
                 direction
             } else {
-//          We are scrolling while first visible item hasn't changed yet
+//          We are scrolling and the very first item is out of the screen.
                 val direction = if (firstVisibleItemIndex > visibleItem) {
                     scrollPosition =
                         ScrollDirection.SettledAfterDownScroll
