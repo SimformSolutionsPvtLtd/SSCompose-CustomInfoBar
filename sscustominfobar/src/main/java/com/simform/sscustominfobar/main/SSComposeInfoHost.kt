@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -73,10 +76,12 @@ private const val TITLE_MAX_LINE = 2
  *
  * @property title
  * @property description
+ * @property icon
  */
 data class SSComposeInfoBarData(
     val title: TextType,
-    val description: TextType? = null
+    val description: TextType? = null,
+    val icon: ImageVector = Icons.Default.Info
 )
 
 /**
@@ -171,6 +176,21 @@ class SSComposeInfoHostState {
      * A read only property that represents the data(title, description and icon) that should be displayed in the [SSComposeInfoBar].
      */
     val currentComposeInfoBarData: State<SSComposeInfoBarData?> = _currentComposeInfoBarData
+
+    /**
+     * Private backing property for offline [currentComposeInfoBarData].
+     */
+    private var _offlineInfoBarData: MutableState<SSComposeInfoBarData?> = mutableStateOf(null)
+    
+    /**
+     * A read only property that represents the data(title, description and icon) 
+     * that should be displayed in the offline [SSComposeInfoBar].
+     */
+    val offlineInfoBarData: State<SSComposeInfoBarData?> = _offlineInfoBarData
+
+    fun setOfflineInfoBarData(offlineInfoBarData: SSComposeInfoBarData) {
+        _offlineInfoBarData.value = offlineInfoBarData
+    }
 
     /**
      * Function that is used to manually hide the currently displayed [SSComposeInfoBar].
@@ -450,12 +470,17 @@ fun SSComposeInfoHost(
                     enter = enterAnimation,
                     exit = exitAnimation
                 ) {
-                    OfflineInfoBar(
-                        offlineData = SSComposeInfoBarData(
-                            title = stringResource(R.string.oops_seems_like_you_are_offline).toTextType(),
-                            description = stringResource(R.string.kindly_check_your_network_connection).toTextType()
+                    val offlineInfoBarData = composeHostState.offlineInfoBarData.value
+                    if (offlineInfoBarData != null) {
+                        OfflineInfoBar(offlineData = offlineInfoBarData)
+                    } else {
+                        OfflineInfoBar(
+                            offlineData = SSComposeInfoBarData(
+                                title = stringResource(R.string.offline_info_bar_title).toTextType(),
+                                description = stringResource(R.string.offline_info_bar_description).toTextType()
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
@@ -565,12 +590,17 @@ fun SSComposeInfoHost(
                     enter = enterAnimation,
                     exit = exitAnimation
                 ) {
-                    OfflineInfoBar(
-                        offlineData = SSComposeInfoBarData(
-                            title = stringResource(R.string.oops_seems_like_you_are_offline).toTextType(),
-                            description = stringResource(R.string.kindly_check_your_network_connection).toTextType()
+                    val offlineInfoBarData = composeHostState.offlineInfoBarData.value
+                    if (offlineInfoBarData != null) {
+                        OfflineInfoBar(offlineData = offlineInfoBarData)
+                    } else {
+                        OfflineInfoBar(
+                            offlineData = SSComposeInfoBarData(
+                                title = stringResource(R.string.offline_info_bar_title).toTextType(),
+                                description = stringResource(R.string.offline_info_bar_description).toTextType()
+                            )
                         )
-                    )
+                    }
                 }
             }
         }

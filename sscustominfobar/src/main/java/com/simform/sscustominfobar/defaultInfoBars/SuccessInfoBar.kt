@@ -1,12 +1,9 @@
 package com.simform.sscustominfobar.defaultInfoBars
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import com.simform.sscustominfobar.main.SSComposeInfoBar
 import com.simform.sscustominfobar.main.SSComposeInfoBarColors
@@ -24,7 +21,6 @@ private val successContentColor = white
  *
  * @param modifier The modifier which will be applied to the [SuccessInfoBar].
  * @param successData The [SSComposeInfoBarData] that contains the title and description of the success.
- * @param icon The [ImageVector] that will be shown in [SSComposeInfoBar] for success.
  * @param textStyle The [TextStyle] to be applied to all the text in [SSComposeInfoBar].
  * @param shape The [Shape] of the [SuccessInfoBar].
  * @param onCloseClicked Called when user clicks on the close icon in [SSComposeInfoBar].
@@ -34,7 +30,6 @@ private val successContentColor = white
 fun SuccessInfoBar(
     modifier: Modifier = Modifier,
     successData: SSComposeInfoBarData,
-    icon: ImageVector = Icons.Outlined.CheckCircle,
     textStyle: TextStyle = LocalTextStyle.current,
     shape: Shape = SSComposeInfoBarDefaults.shape,
     onCloseClicked: () -> Unit = {},
@@ -46,7 +41,7 @@ fun SuccessInfoBar(
         titleStyle = textStyle,
         description = successData.description,
         shape = shape,
-        icon = icon,
+        icon = successData.icon,
         customBackground = successBackgroundColor.toSSCustomBackground(),
         contentColors = SSComposeInfoBarColors(
             iconColor = successContentColor,
