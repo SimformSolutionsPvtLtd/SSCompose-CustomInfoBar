@@ -50,6 +50,7 @@ import com.simform.sscustominfobar.res.Dimens.DpTwelve
 import com.simform.sscustominfobar.res.Dimens.DpZero
 import com.simform.sscustominfobar.utils.ConnectivityObserver
 import com.simform.sscustominfobar.utils.DirectionalLazyListState
+import com.simform.sscustominfobar.utils.SCROLL_THRESHOLD
 import com.simform.sscustominfobar.utils.ScrollDirection
 import com.simform.sscustominfobar.utils.TextType
 import com.simform.sscustominfobar.utils.getShapeByDirection
@@ -177,6 +178,36 @@ class SSComposeInfoHostState {
     fun dismiss() {
         visibilityState.targetState = Hidden.value
         previousState = Visible
+    }
+
+    /**
+     * Scroll threshold to use for scroll to hide feature.
+     */
+    private var scrollThreshold = SCROLL_THRESHOLD
+
+    /**
+     * setter function for scrollThreshold.
+     *
+     * @param threshold
+     */
+    fun setScrollThreshold(threshold: Int) {
+        scrollThreshold = threshold
+        directionalLazyListState?.updateScrollThreshold(scrollThreshold)
+    }
+
+    // For Scroll-to-hide feature
+    internal var directionalLazyListState: DirectionalLazyListState? = null
+
+    // Initialize the directionalLazyListState using contentScrollState
+    @Composable
+    internal fun InitializeDirectionalLazyListState(contentScrollState: LazyListState?) {
+        if (contentScrollState != null && directionalLazyListState == null) {
+            directionalLazyListState =
+                rememberDirectionalLazyListState(
+                    lazyListState = contentScrollState,
+                    scrollThreshold = scrollThreshold
+                )
+        }
     }
 
     /**
@@ -350,6 +381,7 @@ fun SSComposeInfoHost(
     content: @Composable () -> Unit
 ) {
     composeHostState.setDirection(direction)
+    composeHostState.InitializeDirectionalLazyListState(contentScrollState = contentScrollState)
     val exitAnimation = getExitAnimation(composeHostState.direction.value, animationType)
     val enterAnimation = getEnterAnimation(composeHostState.direction.value, animationType)
 
@@ -372,18 +404,12 @@ fun SSComposeInfoHost(
     if (enableNetworkMonitoring) {
         isOnline = monitor.isOnline.collectAsStateWithLifecycle(initialValue = true)
     }
-
-    // For Scroll-to-hide feature
-    var directionalLazyListState: DirectionalLazyListState? = null
-    if (contentScrollState != null) {
-        directionalLazyListState =
-            rememberDirectionalLazyListState(lazyListState = contentScrollState)
-    }
     val shouldBeVisible by remember(composeHostState.isVisible) {
         derivedStateOf {
             if (composeHostState.isVisible) {
                 // The scroll to hide behaviour should only be allowed when a SSInfoBar is currently being shown.
-                (directionalLazyListState?.scrollDirection == ScrollDirection.SettledAtTop || directionalLazyListState?.scrollDirection == ScrollDirection.SettleAfterUpScroll)
+                (composeHostState.directionalLazyListState?.scrollDirection == ScrollDirection.SettledAtTop
+                        || composeHostState.directionalLazyListState?.scrollDirection == ScrollDirection.SettleAfterUpScroll)
             } else true
         }
     }
@@ -403,7 +429,7 @@ fun SSComposeInfoHost(
                     if (isSwipeToDismissEnabled && composeHostState.isInfinite.value) Modifier.swipeable { composeHostState.dismiss() } else Modifier
                 )
                 .then(
-                    if (directionalLazyListState != null) Modifier
+                    if (composeHostState.directionalLazyListState != null) Modifier
                         .graphicsLayer {
                             translationY = animatedYOffset
                         } else Modifier
@@ -461,6 +487,7 @@ fun SSComposeInfoHost(
     content: @Composable () -> Unit
 ) {
     composeHostState.setDirection(direction)
+    composeHostState.InitializeDirectionalLazyListState(contentScrollState = contentScrollState)
     val exitAnimation = getExitAnimation(composeHostState.direction.value, animationType)
     val enterAnimation = getEnterAnimation(composeHostState.direction.value, animationType)
 
@@ -484,17 +511,12 @@ fun SSComposeInfoHost(
         isOnline = monitor.isOnline.collectAsStateWithLifecycle(initialValue = true)
     }
 
-    // For Scroll-to-hide feature
-    var directionalLazyListState: DirectionalLazyListState? = null
-    if (contentScrollState != null) {
-        directionalLazyListState =
-            rememberDirectionalLazyListState(lazyListState = contentScrollState)
-    }
     val shouldBeVisible by remember(composeHostState.isVisible) {
         derivedStateOf {
             if (composeHostState.isVisible) {
                 // The scroll to hide behaviour should only be allowed when a SSInfoBar is currently being shown.
-                (directionalLazyListState?.scrollDirection == ScrollDirection.SettledAtTop || directionalLazyListState?.scrollDirection == ScrollDirection.SettleAfterUpScroll)
+                (composeHostState.directionalLazyListState?.scrollDirection == ScrollDirection.SettledAtTop
+                        || composeHostState.directionalLazyListState?.scrollDirection == ScrollDirection.SettleAfterUpScroll)
             } else true
         }
     }
@@ -514,7 +536,7 @@ fun SSComposeInfoHost(
                     if (isSwipeToDismissEnabled && composeHostState.isInfinite.value) Modifier.swipeable { composeHostState.dismiss() } else Modifier
                 )
                 .then(
-                    if (directionalLazyListState != null) Modifier
+                    if (composeHostState.directionalLazyListState != null) Modifier
                         .graphicsLayer {
                             translationY = animatedYOffset
                         } else Modifier
