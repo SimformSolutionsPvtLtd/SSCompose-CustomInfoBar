@@ -1,15 +1,15 @@
 [versions]
+activityCompose = "1.9.0"
 agp = "8.3.2"
-kotlin = "1.9.23"
-coreKtx = "1.12.0"
+appcompat = "1.7.0"
+composeBom = "2024.06.00"
+coreKtx = "1.13.1"
+espressoCore = "3.6.1"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.7.0"
-activityCompose = "1.8.2"
-composeBom = "2024.04.00"
-appcompat = "1.6.1"
-uiTooling = "1.6.5"
+junitVersion = "1.2.1"
+kotlin = "1.9.23"
+lifecycleRuntimeKtx = "2.8.3"
+uiTooling = "1.6.8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
