@@ -19,11 +19,11 @@ afterEvaluate {
 }
 
 android {
-    namespace = "com.simform.sscustominfobar"
-    compileSdk = 34
+    namespace = libs.versions.group.id.get()
+    compileSdk = libs.versions.compileSDK.get().toInt()
 
     defaultConfig {
-        minSdk = 21
+        minSdk = libs.versions.minSDK.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
