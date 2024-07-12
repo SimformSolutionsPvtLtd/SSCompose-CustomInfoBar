@@ -4,14 +4,14 @@ plugins {
 }
 
 android {
-    namespace = "com.simform.sscustominfobarapp"
-    compileSdk = 34
+    namespace = libs.versions.applicationId.get()
+    compileSdk = libs.versions.compileSDK.get().toInt()
 
     defaultConfig {
-        applicationId = "com.simform.sscustominfobar"
-        minSdk = 21
-        targetSdk = 34
-        versionCode = 1
+        applicationId = libs.versions.applicationId.get()
+        minSdk = libs.versions.minSDK.get().toInt()
+        targetSdk = libs.versions.targetSDK.get().toInt()
+        versionCode = libs.versions.versionCode.get().toInt()
         versionName = libs.versions.version.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

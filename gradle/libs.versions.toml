@@ -11,11 +11,20 @@ kotlin = "1.9.23"
 lifecycleRuntimeKtx = "2.8.3"
 uiTooling = "1.6.8"
 
+# For build configuration
+compileSDK = "34"
+minSDK = "21"
+targetSDK = "34"
+versionCode = "1"
+applicationId = "com.simform.sscustominfobarapp"
+
+# For publishing the library
 mavenpublish = "maven-publish"
 release = "release"
 group-id = "com.simform.sscustominfobar"
 artifact-id = "sscustominfobar"
 version = "1.0"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
