@@ -74,11 +74,25 @@ display informative messages within your app.
 
     ```kotlin
     dependencies {
-        implementation("com.github.SimformSolutionsPvtLtd:SSComposeInfoBar:1.0")
+        implementation("com.github.SimformSolutionsPvtLtd:SSCompose-CustomInfoBar:1.0")
     }
     ```
+   
+2. Add the JitPack repository
 
-2. Create ComposeInfoHost with default parameters to host ComposeInfoBar (NOTE: Here we are not
+    For latest Android Studio, in **settings.gradle** file
+    inside **`dependencyResolutionManagement`** block
+
+    ```kotlin
+    dependencyResolutionManagement {
+        repositories {
+            ...
+            maven { url = uri("https://jitpack.io") }
+        }
+    }
+     ```
+
+3. Create ComposeInfoHost with default parameters to host ComposeInfoBar (NOTE: Here we are not
    passing an custom ComposeInfoBar so it will use a default implementation. To show custom
    ComposeInfoBar check out [SSComposeInfoHost-Customisation-Guide])
 
@@ -96,7 +110,7 @@ display informative messages within your app.
     }
     ```
 
-3. Show composeInfoBar anywhere in your project
+4. Show composeInfoBar anywhere in your project
 
     ```kotlin
     val coroutineScope = rememberCoroutineScope()
@@ -113,7 +127,7 @@ display informative messages within your app.
     }
     ```
 
-4. For full customisation of SSComposeInfoBar checkout [SSComposeInfoBar-Customisation-Guide]
+5. For full customisation of SSComposeInfoBar checkout [SSComposeInfoBar-Customisation-Guide]
 
 ## :heart: Find this samples useful?
 
