@@ -56,17 +56,17 @@ display informative messages within your app.
 |---|
 |<video src="https://github.com/SimformSolutionsPvtLtd/SSCompose-CustomInfoBar/assets/125441434/303282b1-91c2-4094-b030-923403be1e85"  />|
 
-| Default Demo                                     | Error Themed                                   | Warning Themed                                   |
-|--------------------------------------------------|------------------------------------------------|--------------------------------------------------|
-| <img src="/gifs_2/default.gif" height="500px" /> | <img src="/gifs_2/error.gif" height="500px" /> | <img src="/gifs_2/warning.gif" height="500px" /> |
+| Default Demo                                   | Error Themed                                 | Warning Themed                                 |
+|------------------------------------------------|----------------------------------------------|------------------------------------------------|
+| <img src="/gifs/default.gif" height="500px" /> | <img src="/gifs/error.gif" height="500px" /> | <img src="/gifs/warning.gif" height="500px" /> |
 
 | Success Themed                                   | Annotated Strings                                  | Gradient Background                               |
 |--------------------------------------------------|----------------------------------------------------|---------------------------------------------------|
-| <img src="/gifs_2/success.gif" height="500px" /> | <img src="/gifs_2/annotated.gif" height="500px" /> | <img src="/gifs_2/gradient.gif" height="500px" /> |
+| <img src="/gifs/success.gif" height="500px" /> | <img src="/gifs/annotated.gif" height="500px" /> | <img src="/gifs/gradient.gif" height="500px" /> |
 
 | SVG Background                               | PNG Background                               | Action Button                                   |
 |----------------------------------------------|----------------------------------------------|-------------------------------------------------|
-| <img src="/gifs_2/svg.gif" height="500px" /> | <img src="/gifs_2/png.gif" height="500px" /> | <img src="/gifs_2/action.gif" height="500px" /> |
+| <img src="/gifs/svg.gif" height="500px" /> | <img src="/gifs/png.gif" height="500px" /> | <img src="/gifs/action.gif" height="500px" /> |
 
 # :books: How it works:
 
