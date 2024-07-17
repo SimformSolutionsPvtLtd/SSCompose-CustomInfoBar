@@ -1,3 +1,5 @@
+![Banner]
+
 # :speech_balloon: SSCompose-CustomInfoBar :speech_balloon:
 
 <div align="center">
@@ -137,7 +139,7 @@ Distributed under the MIT license. See [LICENSE] for details.
 
 <!-- Reference links -->
 
-[Banner]:                   https://github.com/SimformSolutionsPvtLtd/SSCompose-FurniCraftAR/assets/147126103/a02b7b5a-e793-4201-93b9-2f9a2334f39a
+[Banner]:                   https://github.com/user-attachments/assets/231ef0fa-4ac0-4bf4-9060-63c3b15f0512
 
 [Android]:                  https://www.android.com/
 
